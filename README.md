@@ -1,6 +1,6 @@
-## DBaaS Catalog
+## Everest Catalog
 
-Welcome! This repository is a DBaaS Platform OLM Catalog which include sets of operators to enable DBaaS on Kubernetes.
+Welcome! This repository is an Everest OLM Catalog which includes sets of operators to enable DBaaS on Kubernetes.
 
 See [Design](docs/design/dbaas-catalog-design.md) for more details.
 
@@ -13,7 +13,7 @@ operator-sdk olm install
 
 kubectl delete catalogsource operatorhubio-catalog -n olm
 
-kubectl apply -f https://raw.githubusercontent.com/percona/dbaas-catalog/main/dbaas-catalog.yaml
+kubectl apply -f https://raw.githubusercontent.com/percona/everest-catalog/main/everest-catalog.yaml
 kubectl get catalogsource -n olm
 kubectl get packagemanifest -n olm
 #wait for packagemanifests to appear
