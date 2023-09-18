@@ -1,0 +1,37 @@
+name: PR testing
+
+on:
+  pull_request:
+    branches: 
+    - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+  
+      # models a future action where the submittor is validated against auth access for the
+      # catalog contribution
+      - name: Validate Contributor
+        run: |
+          NUM_OWNERS=`grep -c ${{ github.actor }} CODEOWNERS`
+          if [ $NUM_OWNERS -gt 0 ] ; then
+            echo "validated user found in database"
+          else
+            exit 1
+          fi
+
+      - name: Validate Contribution
+        uses: joelanford/opm-validate@main
+        with:
+          catalog: catalog
+
+#      - name: automerge PRs that pass checks
+#        uses: peter-evans/enable-pull-request-automerge@v1
+#        with:
+#          token: ${{ secrets.GH_PAT }}
+#          pull-request-number: ${{ github.event.pull_request.number }}
+#          merge-method: merge

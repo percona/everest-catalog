@@ -1,0 +1,43 @@
+name: Build and Push image
+
+on:
+  push:
+    branches: [ percona-platform ]
+    tags:
+      - percona/*
+  workflow_dispatch:
+
+jobs:
+
+  build: 
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            percona/dbaas-catalog,enable=${{ github.ref != format('refs/heads/{0}', 'percona-platform') }}
+            perconalab/dbaas-catalog,enable=${{ github.ref == format('refs/heads/{0}', 'percona-platform') }}
+          tags: |
+            type=match,pattern=percona/v(.*),group=1
+            type=match,pattern=percona/v(\d.\d),group=1
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'percona-platform') }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          file: dbaas-catalog.Dockerfile
