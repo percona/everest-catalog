@@ -9,9 +9,9 @@ on:
 
 jobs:
 
-  build: 
+  build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Check out
         uses: actions/checkout@v3
@@ -20,7 +20,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/percona/dbaas-catalog
+          images: ghcr.io/percona/everest-catalog
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
@@ -40,4 +40,4 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          file: dbaas-catalog.Dockerfile
+          file: everest-catalog.Dockerfile

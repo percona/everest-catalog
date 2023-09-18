@@ -9,9 +9,9 @@ on:
 
 jobs:
 
-  build: 
+  build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Check out
         uses: actions/checkout@v3
@@ -21,8 +21,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            percona/dbaas-catalog,enable=${{ github.ref != format('refs/heads/{0}', 'percona-platform') }}
-            perconalab/dbaas-catalog,enable=${{ github.ref == format('refs/heads/{0}', 'percona-platform') }}
+            percona/everest-catalog,enable=${{ github.ref != format('refs/heads/{0}', 'percona-platform') }}
+            perconalab/everest-catalog,enable=${{ github.ref == format('refs/heads/{0}', 'percona-platform') }}
           tags: |
             type=match,pattern=percona/v(.*),group=1
             type=match,pattern=percona/v(\d.\d),group=1
@@ -40,4 +40,4 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          file: dbaas-catalog.Dockerfile
+          file: everest-catalog.Dockerfile
