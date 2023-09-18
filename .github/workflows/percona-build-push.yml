@@ -2,7 +2,9 @@ name: Build and Push image
 
 on:
   push:
-    branches: [ percona-platform ]
+    branches:
+      - main
+      - release-[0-9]+.[0-9]+.[0-9]+*
     tags:
       - percona/*
   workflow_dispatch:
@@ -21,12 +23,11 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            percona/everest-catalog,enable=${{ github.ref != format('refs/heads/{0}', 'percona-platform') }}
-            perconalab/everest-catalog,enable=${{ github.ref == format('refs/heads/{0}', 'percona-platform') }}
+            percona/everest-catalog,enable=${{ github.ref != format('refs/heads/{0}', 'main') }}
           tags: |
-            type=match,pattern=percona/v(.*),group=1
-            type=match,pattern=percona/v(\d.\d),group=1
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'percona-platform') }}
+            type=match,pattern=release-v(.*),group=1
+            type=match,pattern=release-v(\d.\d),group=1
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
