@@ -23,11 +23,11 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            percona/everest-catalog,enable=${{ github.ref != format('refs/heads/{0}', 'main') }}
+            percona/everest-catalog,enable=true
           tags: |
             type=match,pattern=release-(.*),group=1
             type=match,pattern=release-(\d.\d),group=1
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            type=raw,value=latest,enable=true
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
