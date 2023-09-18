@@ -25,8 +25,8 @@ jobs:
           images: |
             percona/everest-catalog,enable=${{ github.ref != format('refs/heads/{0}', 'main') }}
           tags: |
-            type=match,pattern=release-v(.*),group=1
-            type=match,pattern=release-v(\d.\d),group=1
+            type=match,pattern=release-(.*),group=1
+            type=match,pattern=release-(\d.\d),group=1
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
 
       - name: Login to GitHub Container Registry
