@@ -8,3 +8,4 @@ Stable:
   Bundles:
   - Image: docker.io/perconalab/everest-operator-bundle:0.5.0
   - Image: docker.io/perconalab/everest-operator-bundle:0.6.0-dev1
+  - Image: docker.io/perconalab/everest-operator-bundle:0.6.0-dev2
