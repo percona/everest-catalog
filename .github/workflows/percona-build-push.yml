@@ -4,10 +4,8 @@ on:
   push:
     branches:
       - main
-      - release-[0-9]+.[0-9]+.[0-9]+*
     tags:
       - v*
-  workflow_dispatch:
 
 jobs:
 
@@ -23,7 +21,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            percona/everest-catalog,enable=true
+            percona/everest-catalog,enable=${{ github.ref_type == 'tag' && !contains(github.ref_name, 'rc') }}
+            perconalab/everest-catalog
           tags: |
             type=match,pattern=v(.*),group=1
             type=match,pattern=v(\d.\d),group=1
