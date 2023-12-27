@@ -1,0 +1,39 @@
+name: Main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  check:
+    name: Checks
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Check default main state - dev version
+        run: |
+          if ! grep -q "docker.io/perconalab/everest-operator-bundle:0.0.0" catalog/everest-operator/veneer.yaml; then 
+            echo "veneer.yaml should have the 0.0.0 image in the Stable channel images list" 
+            exit 1 
+          fi
+      - name: Check default main state - generated files
+        run: |
+          echo "Download opm tool"
+          curl -Lo /tmp/opm https://github.com/operator-framework/operator-registry/releases/latest/download/linux-amd64-opm
+          chmod +x /tmp/opm
+          echo "Render catalog"
+          /tmp/opm alpha render-template semver -o yaml < ./catalog/everest-operator/veneer.yaml > ./catalog/everest-operator/catalog.yaml
+          echo "Checking there is no source code changes"
+          git diff --exit-code
+
+      - name: Run debug commands on failure
+        if: ${{ failure() }}
+        run: |
+          env
+          pwd
+          git status
