@@ -114,8 +114,8 @@ properties:
         ]
       capabilities: Deep Insights
       categories: Database
-      containerImage: perconalab/percona-postgresql-operator:main
-      createdAt: 2024-01-02T12:59:10UTC
+      containerImage: percona/percona-postgresql-operator:2.3.0
+      createdAt: 2024-01-03T11:46:22UTC
       description: Percona Operator for PostgreSQL manages the lifecycle of Percona
         PostgreSQL cluster instances.
       olm.properties: '[]'
@@ -400,6 +400,6 @@ properties:
 relatedImages:
 - image: docker.io/perconalab/percona-postgresql-operator:2.3.0-community-bundle
   name: ""
-- image: perconalab/percona-postgresql-operator:main
+- image: percona/percona-postgresql-operator:2.3.0
   name: ""
 schema: olm.bundle
