@@ -3,4 +3,4 @@ GenerateMajorChannels: true
 GenerateMinorChannels: false
 Stable:
   Bundles:
-  - Image: docker.io/perconalab/everest-operator-bundle:0.0.0
+  - Image: docker.io/perconalab/everest-operator-bundle:0.7.0
