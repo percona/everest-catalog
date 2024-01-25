@@ -3,4 +3,4 @@ GenerateMajorChannels: true
 GenerateMinorChannels: false
 Fast:
   Bundles:
-  - Image: docker.io/perconalab/percona-postgresql-operator:2.3.0-community-bundle
+  - Image: docker.io/perconalab/percona-postgresql-operator:2.3.1-community-bundle
