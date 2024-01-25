@@ -4,13 +4,13 @@ name: percona-postgresql-operator
 schema: olm.package
 ---
 entries:
-- name: percona-postgresql-operator.v2.3.0
+- name: percona-postgresql-operator.v2.3.1
 name: fast-v2
 package: percona-postgresql-operator
 schema: olm.channel
 ---
-image: docker.io/perconalab/percona-postgresql-operator:2.3.0-community-bundle
-name: percona-postgresql-operator.v2.3.0
+image: docker.io/perconalab/percona-postgresql-operator:2.3.1-community-bundle
+name: percona-postgresql-operator.v2.3.1
 package: percona-postgresql-operator
 properties:
 - type: olm.gvk
@@ -36,7 +36,7 @@ properties:
 - type: olm.package
   value:
     packageName: percona-postgresql-operator
-    version: 2.3.0
+    version: 2.3.1
 - type: olm.csv.metadata
   value:
     annotations:
@@ -51,7 +51,7 @@ properties:
             "spec": {
               "backups": {
                 "pgbackrest": {
-                  "image": "perconalab/percona-postgresql-operator:main-ppg15-pgbackrest",
+                  "image": "percona/percona-postgresql-operator:2.3.1-ppg16-pgbackrest",
                   "manual": {
                     "options": [
                       "--type=full"
@@ -80,7 +80,7 @@ properties:
                   ]
                 }
               },
-              "image": "perconalab/percona-postgresql-operator:main-ppg15-postgres",
+              "image": "percona/percona-postgresql-operator:2.3.1-ppg16-postgres",
               "imagePullPolicy": "Always",
               "instances": [
                 {
@@ -99,14 +99,14 @@ properties:
               ],
               "pmm": {
                 "enabled": false,
-                "image": "percona/pmm-client:2.32.0",
+                "image": "percona/pmm-client:2.41.0",
                 "secret": "example-pmm-secret",
                 "serverHost": "monitoring-service"
               },
               "postgresVersion": 15,
               "proxy": {
                 "pgBouncer": {
-                  "image": "perconalab/percona-postgresql-operator:main-ppg15-pgbouncer"
+                  "image": "percona/percona-postgresql-operator:2.3.1-ppg16-pgbouncer"
                 }
               }
             }
@@ -114,12 +114,12 @@ properties:
         ]
       capabilities: Deep Insights
       categories: Database
-      containerImage: percona/percona-postgresql-operator:2.3.0
-      createdAt: 2024-01-03T11:46:22UTC
+      containerImage: percona/percona-postgresql-operator:2.3.1
+      createdAt: 2024-01-24T09:48:01UTC
       description: Percona Operator for PostgreSQL manages the lifecycle of Percona
         PostgreSQL cluster instances.
       olm.properties: '[]'
-      olm.skipRange: '>=2.0.0 <v2.3.0'
+      olm.skipRange: '>=2.0.0 <v2.3.1'
       repository: https://github.com/percona/percona-postgresql-operator
       support: percona.com
     apiServiceDefinitions: {}
@@ -393,13 +393,13 @@ properties:
     - email: info@percona.com
       name: Percona
     maturity: stable
-    minKubeVersion: 1.23.0
+    minKubeVersion: 1.24.0
     provider:
       name: Percona
       url: https://www.percona.com/
 relatedImages:
-- image: docker.io/perconalab/percona-postgresql-operator:2.3.0-community-bundle
+- image: docker.io/perconalab/percona-postgresql-operator:2.3.1-community-bundle
   name: ""
-- image: percona/percona-postgresql-operator:2.3.0
+- image: percona/percona-postgresql-operator:2.3.1
   name: ""
 schema: olm.bundle
