@@ -4,13 +4,13 @@ name: everest-operator
 schema: olm.package
 ---
 entries:
-- name: everest-operator.v0.0.0
+- name: everest-operator.v0.9.0-rc1
 name: stable-v0
 package: everest-operator
 schema: olm.channel
 ---
-image: docker.io/perconalab/everest-operator-bundle:0.0.0
-name: everest-operator.v0.0.0
+image: docker.io/perconalab/everest-operator-bundle:0.9.0-rc1
+name: everest-operator.v0.9.0-rc1
 package: everest-operator
 properties:
 - type: olm.gvk
@@ -46,7 +46,7 @@ properties:
 - type: olm.package
   value:
     packageName: everest-operator
-    version: 0.0.0
+    version: 0.9.0-rc1
 - type: olm.csv.metadata
   value:
     annotations:
@@ -151,7 +151,8 @@ properties:
           }
         ]
       capabilities: Basic Install
-      operators.operatorframework.io/builder: operator-sdk-v1.25.2
+      createdAt: "2024-03-21T12:50:43Z"
+      operators.operatorframework.io/builder: operator-sdk-v1.32.0
       operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
     apiServiceDefinitions: {}
     crdDescriptions:
@@ -220,9 +221,9 @@ properties:
       name: Percona
       url: https://percona.com
 relatedImages:
-- image: docker.io/perconalab/everest-operator-bundle:0.0.0
+- image: docker.io/perconalab/everest-operator-bundle:0.9.0-rc1
   name: ""
-- image: docker.io/perconalab/everest-operator:0.0.0
+- image: docker.io/perconalab/everest-operator:0.9.0-rc1
   name: ""
 - image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
   name: ""
