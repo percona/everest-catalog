@@ -31,6 +31,21 @@ jobs:
           echo "Checking there is no source code changes"
           git diff --exit-code
 
+      - name: Build image to check it for vulnerabilities
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: false
+          tags: "perconalab/everest-catalog:0.0.0"
+          file: everest-catalog.Dockerfile
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.12.0
+        with:
+          image-ref: "perconalab/everest-catalog:0.0.0"
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+
       - name: Run debug commands on failure
         if: ${{ failure() }}
         run: |
