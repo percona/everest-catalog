@@ -3,9 +3,10 @@ GenerateMajorChannels: true
 GenerateMinorChannels: false
 Fast:
   Bundles:
-  - Image: docker.io/perconalab/everest-operator-bundle:0.0.0
-  - Image: docker.io/perconalab/everest-operator-bundle:0.9.0
-  - Image: docker.io/perconalab/everest-operator-bundle:0.9.1
+    - Image: docker.io/perconalab/everest-operator-bundle:0.0.0
+    - Image: docker.io/perconalab/everest-operator-bundle:0.9.0
+    - Image: docker.io/perconalab/everest-operator-bundle:0.9.1
 Stable:
   Bundles:
-  - Image: docker.io/perconalab/everest-operator-bundle:0.0.0
+    - Image: docker.io/perconalab/everest-operator-bundle:0.9.0
+    - Image: docker.io/perconalab/everest-operator-bundle:0.9.1
