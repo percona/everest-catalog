@@ -611,7 +611,7 @@ properties:
           }
         ]
       capabilities: Basic Install
-      createdAt: "2024-04-17T10:07:58Z"
+      createdAt: "2024-04-17T10:23:44Z"
       operators.operatorframework.io/builder: operator-sdk-v1.32.0
       operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
     apiServiceDefinitions: {}
