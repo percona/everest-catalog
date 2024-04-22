@@ -17,8 +17,8 @@ jobs:
 
       - name: Check default main state - dev version
         run: |
-          if ! grep -q "docker.io/perconalab/everest-operator-bundle:0.0.0" catalog/everest-operator/veneer.yaml; then 
-            echo "veneer.yaml should have the 0.0.0 image in the Stable channel images list" 
+          if ! grep -q "docker.io/perconalab/everest-operator-bundle:0.0.0" veneer/everest-operator.yaml; then 
+            echo "veneer/everest-operator.yaml should have the 0.0.0 image in the Stable channel images list" 
             exit 1 
           fi
       - name: Check default main state - generated files
@@ -27,7 +27,7 @@ jobs:
           curl -Lo /tmp/opm https://github.com/operator-framework/operator-registry/releases/latest/download/linux-amd64-opm
           chmod +x /tmp/opm
           echo "Render catalog"
-          /tmp/opm alpha render-template semver -o yaml < ./catalog/everest-operator/veneer.yaml > ./catalog/everest-operator/catalog.yaml
+          /tmp/opm alpha render-template basic -o yaml ./veneer/everest-operator.yaml > ./catalog/everest-operator/catalog.yaml
           echo "Checking there is no source code changes"
           git diff --exit-code
 
