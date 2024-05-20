@@ -133,6 +133,9 @@ schema: olm.channel
 image: docker.io/perconalab/everest-operator-bundle:0.0.0
 schema: olm.bundle
 ---
+image: docker.io/perconalab/everest-operator-bundle:0.9.2
+schema: olm.bundle
+---
 `
 
 var patchStableRCExpected = `defaultChannel: stable-v0
@@ -177,6 +180,9 @@ schema: olm.channel
 image: docker.io/perconalab/everest-operator-bundle:0.0.0
 schema: olm.bundle
 ---
+image: docker.io/perconalab/everest-operator-bundle:0.9.2-rc1
+schema: olm.bundle
+---
 `
 
 var patchRCExpected = `defaultChannel: stable-v0
@@ -219,6 +225,9 @@ package: everest-operator
 schema: olm.channel
 ---
 image: docker.io/perconalab/everest-operator-bundle:0.0.0
+schema: olm.bundle
+---
+image: docker.io/perconalab/everest-operator-bundle:0.9.1-rc2
 schema: olm.bundle
 ---
 `
@@ -268,6 +277,9 @@ schema: olm.channel
 image: docker.io/perconalab/everest-operator-bundle:0.0.0
 schema: olm.bundle
 ---
+image: docker.io/perconalab/everest-operator-bundle:0.10.0
+schema: olm.bundle
+---
 `
 
 var minorStableRCExpected = `defaultChannel: stable-v0
@@ -313,6 +325,9 @@ package: everest-operator
 schema: olm.channel
 ---
 image: docker.io/perconalab/everest-operator-bundle:0.0.0
+schema: olm.bundle
+---
+image: docker.io/perconalab/everest-operator-bundle:0.10.0-rc1
 schema: olm.bundle
 ---
 `

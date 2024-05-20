@@ -13,6 +13,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const imageNameTemplate = "docker.io/perconalab/everest-operator-bundle:%s"
+
 func main() {
 	var (
 		versionType    string
@@ -61,7 +63,12 @@ func main() {
 }
 
 func createPatchVersionVeneer(veneerFile, channel, currentVersion, newVersion string) ([]byte, error) {
-	return updateVeneerFile(veneerFile, "olm.channel", channel, func(m map[string]any) (map[string]any, error) {
+	source, err := os.ReadFile(veneerFile)
+	if err != nil {
+		return nil, fmt.Errorf("could not read veneer file: %w", err)
+	}
+
+	ret, err := updateVeneerFile(source, "olm.channel", "name", channel, func(m map[string]any) (map[string]any, error) {
 		entries, ok := m["entries"]
 		if !ok {
 			return nil, errors.New("could not find entries")
@@ -102,10 +109,21 @@ func createPatchVersionVeneer(veneerFile, channel, currentVersion, newVersion st
 
 		return m, nil
 	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return addOLMBundle(ret, newVersion)
 }
 
 func createMinorVersionVeneer(veneerFile, channel, currentVersion, newVersion string) ([]byte, error) {
-	return updateVeneerFile(veneerFile, "olm.channel", channel, func(m map[string]any) (map[string]any, error) {
+	source, err := os.ReadFile(veneerFile)
+	if err != nil {
+		return nil, fmt.Errorf("could not read veneer file: %w", err)
+	}
+
+	ret, err := updateVeneerFile(source, "olm.channel", "name", channel, func(m map[string]any) (map[string]any, error) {
 		entries, ok := m["entries"]
 		if !ok {
 			return nil, errors.New("could not find entries")
@@ -154,6 +172,12 @@ func createMinorVersionVeneer(veneerFile, channel, currentVersion, newVersion st
 
 		return m, nil
 	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return addOLMBundle(ret, newVersion)
 }
 
 func findEntry(entries []any, version string) (int, map[string]any, error) {
@@ -178,13 +202,8 @@ func findEntry(entries []any, version string) (int, map[string]any, error) {
 	return 0, nil, errors.New("not found")
 }
 
-func updateVeneerFile(veneerFile, schema, name string, replace func(map[string]any) (map[string]any, error)) ([]byte, error) {
-	source, err := os.ReadFile(veneerFile)
-	if err != nil {
-		return nil, fmt.Errorf("could not read veneer file: %w", err)
-	}
-
-	d := yaml.NewDecoder(bytes.NewReader(source))
+func updateVeneerFile(veneerFile []byte, schema, fieldName, fieldValue string, replace func(map[string]any) (map[string]any, error)) ([]byte, error) {
+	d := yaml.NewDecoder(bytes.NewReader(veneerFile))
 	docs := make([]map[string]any, 0, 10)
 	for {
 		var doc map[string]any
@@ -200,7 +219,7 @@ func updateVeneerFile(veneerFile, schema, name string, replace func(map[string]a
 			continue
 		}
 
-		if n, ok := doc["name"]; !ok || n != name {
+		if f, ok := doc[fieldName]; !ok || f != fieldValue {
 			docs = append(docs, doc)
 			continue
 		}
@@ -227,4 +246,31 @@ func updateVeneerFile(veneerFile, schema, name string, replace func(map[string]a
 	}
 
 	return b.Bytes(), nil
+}
+
+func addOLMBundle(veneeerContents []byte, newVersion string) ([]byte, error) {
+	ret := veneeerContents
+
+	var (
+		foundImage bool
+		imageName  = fmt.Sprintf(imageNameTemplate, newVersion)
+	)
+
+	_, err := updateVeneerFile(veneeerContents, "olm.bundle", "image", imageName, func(m map[string]any) (map[string]any, error) {
+		foundImage = true
+		return m, nil
+	})
+	if err != nil {
+		return nil, errors.Join(err, errors.New("could not find olm.bundle"))
+	}
+
+	if !foundImage {
+		ret = append(ret, []byte(fmt.Sprintf(
+			"image: %s\n"+
+				"schema: olm.bundle\n"+
+				"---\n", imageName,
+		))...)
+	}
+
+	return ret, nil
 }
