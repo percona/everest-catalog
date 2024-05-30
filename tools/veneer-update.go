@@ -58,8 +58,6 @@ func main() {
 	if err := rootCmd.Execute(); err != nil {
 		panic(err)
 	}
-
-	fmt.Println("done")
 }
 
 func createPatchVersionVeneer(veneerFile, channel, currentVersion, newVersion string) ([]byte, error) {
