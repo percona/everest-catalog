@@ -45,7 +45,8 @@ func main() {
 				panic(err)
 			}
 
-			fmt.Println(string(b))
+			out := strings.TrimSuffix(string(b), "---\n")
+			fmt.Println(out)
 		},
 	}
 
