@@ -3,13 +3,8 @@ GenerateMajorChannels: true
 GenerateMinorChannels: false
 Fast:
   Bundles:
-  - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.13.1
   - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.14.0
 Stable:
   Bundles:
-  - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.11.0
-  - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.12.0
-  - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.13.0
-  - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.13.1
   - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.14.0
   - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.15.0
