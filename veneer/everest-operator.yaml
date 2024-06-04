@@ -8,8 +8,7 @@ entries:
 - name: everest-operator.v0.9.1
 - name: everest-operator.v0.10.0
 - name: everest-operator.v0.10.1
-- name: everest-operator.v0.0.0
-  replaces: everest-operator.v0.10.1
+  replaces: everest-operator.v0.9.0
   skips:
   - everest-operator.v0.9.0
   - everest-operator.v0.9.1
@@ -29,9 +28,6 @@ entries:
   - everest-operator.v0.10.0
 package: everest-operator
 schema: olm.channel
----
-schema: olm.bundle
-image: docker.io/perconalab/everest-operator-bundle:0.0.0
 ---
 schema: olm.bundle
 image: docker.io/perconalab/everest-operator-bundle:0.9.0
