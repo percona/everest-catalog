@@ -5,6 +5,8 @@ schema: olm.package
 ---
 entries:
 - name: percona-server-mongodb-operator.v1.15.0
+- name: percona-server-mongodb-operator.v1.16.0
+  replaces: percona-server-mongodb-operator.v1.15.0
 name: fast-v1
 package: percona-server-mongodb-operator
 schema: olm.channel
@@ -13,6 +15,10 @@ entries:
 - name: percona-server-mongodb-operator.v1.14.0
 - name: percona-server-mongodb-operator.v1.15.0
   replaces: percona-server-mongodb-operator.v1.14.0
+- name: percona-server-mongodb-operator.v1.16.0
+  replaces: percona-server-mongodb-operator.v1.15.0
+  skips:
+  - percona-server-mongodb-operator.v1.14.0
 name: stable-v1
 package: percona-server-mongodb-operator
 schema: olm.channel
@@ -940,5 +946,490 @@ relatedImages:
 - image: docker.io/percona/percona-server-mongodb-operator:1.15.0
   name: ""
 - image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.15.0
+  name: ""
+schema: olm.bundle
+---
+image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.16.0
+name: percona-server-mongodb-operator.v1.16.0
+package: percona-server-mongodb-operator
+properties:
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDB
+    version: v1
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDB
+    version: v1-10-0
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDB
+    version: v1-11-0
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDB
+    version: v1-12-0
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDB
+    version: v1-2-0
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDB
+    version: v1-3-0
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDB
+    version: v1-4-0
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDB
+    version: v1-5-0
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDB
+    version: v1-6-0
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDB
+    version: v1-7-0
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDB
+    version: v1-8-0
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDB
+    version: v1-9-0
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDBBackup
+    version: v1
+- type: olm.gvk
+  value:
+    group: psmdb.percona.com
+    kind: PerconaServerMongoDBRestore
+    version: v1
+- type: olm.package
+  value:
+    packageName: percona-server-mongodb-operator
+    version: 1.16.0
+- type: olm.csv.metadata
+  value:
+    annotations:
+      alm-examples: |-
+        [
+          {
+            "apiVersion": "psmdb.percona.com/v1",
+            "kind": "PerconaServerMongoDB",
+            "metadata": {
+              "name": "my-cluster-name",
+              "finalizers": [
+                "delete-psmdb-pods-in-order"
+              ]
+            },
+            "spec": {
+              "crVersion": "1.16.0",
+              "image": "docker.io/percona/percona-server-mongodb:7.0.8-5",
+              "imagePullPolicy": "Always",
+              "allowUnsafeConfigurations": false,
+              "updateStrategy": "SmartUpdate",
+              "multiCluster": {
+                "enabled": false,
+                "DNSSuffix": "svc.clusterset.local"
+              },
+              "upgradeOptions": {
+                "versionServiceEndpoint": "https://check.percona.com",
+                "apply": "disabled",
+                "schedule": "0 2 * * *",
+                "setFCV": false
+              },
+              "secrets": {
+                "users": "my-cluster-name-secrets",
+                "encryptionKey": "my-cluster-name-mongodb-encryption-key"
+              },
+              "pmm": {
+                "enabled": false,
+                "image": "docker.io/percona/pmm-client:2.41.2",
+                "serverHost": "monitoring-service"
+              },
+              "replsets": [
+                {
+                  "name": "rs0",
+                  "size": 3,
+                  "affinity": {
+                    "antiAffinityTopologyKey": "kubernetes.io/hostname"
+                  },
+                  "podDisruptionBudget": {
+                    "maxUnavailable": 1
+                  },
+                  "expose": {
+                    "enabled": false,
+                    "exposeType": "ClusterIP"
+                  },
+                  "resources": {
+                    "limits": {
+                      "cpu": "300m",
+                      "memory": "0.5G"
+                    },
+                    "requests": {
+                      "cpu": "300m",
+                      "memory": "0.5G"
+                    }
+                  },
+                  "volumeSpec": {
+                    "persistentVolumeClaim": {
+                      "resources": {
+                        "requests": {
+                          "storage": "3Gi"
+                        }
+                      }
+                    }
+                  },
+                  "nonvoting": {
+                    "enabled": false,
+                    "size": 3,
+                    "affinity": {
+                      "antiAffinityTopologyKey": "kubernetes.io/hostname"
+                    },
+                    "podDisruptionBudget": {
+                      "maxUnavailable": 1
+                    },
+                    "resources": {
+                      "limits": {
+                        "cpu": "300m",
+                        "memory": "0.5G"
+                      },
+                      "requests": {
+                        "cpu": "300m",
+                        "memory": "0.5G"
+                      }
+                    },
+                    "volumeSpec": {
+                      "persistentVolumeClaim": {
+                        "resources": {
+                          "requests": {
+                            "storage": "3Gi"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "arbiter": {
+                    "enabled": false,
+                    "size": 1,
+                    "affinity": {
+                      "antiAffinityTopologyKey": "kubernetes.io/hostname"
+                    },
+                    "resources": {
+                      "limits": {
+                        "cpu": "300m",
+                        "memory": "0.5G"
+                      },
+                      "requests": {
+                        "cpu": "300m",
+                        "memory": "0.5G"
+                      }
+                    }
+                  }
+                }
+              ],
+              "sharding": {
+                "enabled": true,
+                "configsvrReplSet": {
+                  "size": 3,
+                  "affinity": {
+                    "antiAffinityTopologyKey": "kubernetes.io/hostname"
+                  },
+                  "podDisruptionBudget": {
+                    "maxUnavailable": 1
+                  },
+                  "expose": {
+                    "enabled": false,
+                    "exposeType": "ClusterIP"
+                  },
+                  "resources": {
+                    "limits": {
+                      "cpu": "300m",
+                      "memory": "0.5G"
+                    },
+                    "requests": {
+                      "cpu": "300m",
+                      "memory": "0.5G"
+                    }
+                  },
+                  "volumeSpec": {
+                    "persistentVolumeClaim": {
+                      "resources": {
+                        "requests": {
+                          "storage": "3Gi"
+                        }
+                      }
+                    }
+                  }
+                },
+                "mongos": {
+                  "size": 3,
+                  "affinity": {
+                    "antiAffinityTopologyKey": "kubernetes.io/hostname"
+                  },
+                  "podDisruptionBudget": {
+                    "maxUnavailable": 1
+                  },
+                  "resources": {
+                    "limits": {
+                      "cpu": "300m",
+                      "memory": "0.5G"
+                    },
+                    "requests": {
+                      "cpu": "300m",
+                      "memory": "0.5G"
+                    }
+                  },
+                  "expose": {
+                    "exposeType": "ClusterIP"
+                  }
+                }
+              },
+              "backup": {
+                "enabled": true,
+                "image": "docker.io/percona/percona-backup-mongodb:2.4.1",
+                "serviceAccountName": "percona-server-mongodb-operator",
+                "pitr": {
+                  "enabled": false,
+                  "oplogOnly": false,
+                  "compressionType": "gzip",
+                  "compressionLevel": 6
+                }
+              }
+            }
+          },
+          {
+            "apiVersion": "psmdb.percona.com/v1",
+            "kind": "PerconaServerMongoDBBackup",
+            "metadata": {
+              "name": "backup1"
+            },
+            "spec": {
+              "clusterName": "my-cluster-name",
+              "storageName": "s3-us-west"
+            }
+          },
+          {
+            "apiVersion": "psmdb.percona.com/v1",
+            "kind": "PerconaServerMongoDBRestore",
+            "metadata": {
+              "name": "restore1"
+            },
+            "spec": {
+              "backupName": "backup1",
+              "clusterName": "my-cluster-name"
+            }
+          }
+        ]
+      capabilities: Deep Insights
+      categories: Database
+      certified: "true"
+      containerImage: docker.io/percona/percona-server-mongodb-operator:1.16.0
+      createdAt: "2024-05-28T10:35:26.000Z"
+      description: Percona Distribution for MongoDB Operator automates the creation,
+        modification, or deletion of items in your Percona Server for MongoDB environment
+      olm.skipRange: <v1.16.0
+      operatorhub.io/ui-metadata-max-k8s-version: "1.29"
+      repository: https://github.com/percona/percona-server-mongodb-operator
+      support: Percona
+    apiServiceDefinitions: {}
+    crdDescriptions:
+      owned:
+      - description: Instance of a Percona Server for MongoDB replica set
+        displayName: PerconaServerMongoDB
+        kind: PerconaServerMongoDB
+        name: perconaservermongodbs.psmdb.percona.com
+        resources:
+        - kind: Deployment
+          name: ""
+          version: v1
+        - kind: Service
+          name: ""
+          version: v1
+        - kind: ReplicaSet
+          name: ""
+          version: v1
+        - kind: Pod
+          name: ""
+          version: v1
+        - kind: Secret
+          name: ""
+          version: v1
+        - kind: ConfigMap
+          name: ""
+          version: v1
+        version: v1
+      - description: Instance of a Percona Server for MongoDB Backup
+        displayName: PerconaServerMongoDBBackup
+        kind: PerconaServerMongoDBBackup
+        name: perconaservermongodbbackups.psmdb.percona.com
+        resources:
+        - kind: Deployment
+          name: ""
+          version: v1
+        - kind: Service
+          name: ""
+          version: v1
+        - kind: ReplicaSet
+          name: ""
+          version: v1
+        - kind: Pod
+          name: ""
+          version: v1
+        - kind: Secret
+          name: ""
+          version: v1
+        - kind: ConfigMap
+          name: ""
+          version: v1
+        version: v1
+      - description: Instance of a Percona Server for MongoDB Restore
+        displayName: PerconaServerMongoDBRestore
+        kind: PerconaServerMongoDBRestore
+        name: perconaservermongodbrestores.psmdb.percona.com
+        resources:
+        - kind: Deployment
+          name: ""
+          version: v1
+        - kind: Service
+          name: ""
+          version: v1
+        - kind: ReplicaSet
+          name: ""
+          version: v1
+        - kind: Pod
+          name: ""
+          version: v1
+        - kind: Secret
+          name: ""
+          version: v1
+        - kind: ConfigMap
+          name: ""
+          version: v1
+        version: v1
+    description: "\n## Percona is Cloud Native\nThe Percona Distribution for MongoDB
+      Kubernetes Operator automates the creation, modification, or deletion of items
+      in your Percona Server for MongoDB environment. The Operator contains the necessary
+      Kubernetes settings to maintain a consistent Percona Server for MongoDB instance
+      modification, or deletion of items in your Percona Server for MongoDB environment.
+      The Operator contains the necessary Kubernetes settings to maintain a consistent
+      Percona Server for MongoDB instance.\n\nConsult the [documentation](https://www.percona.com/doc/kubernetes-operator-for-psmongodb/index.html/)
+      on the Percona Kubernetes Operator for Percona Server for MongoDB for complete
+      details on capabilities and options.\n\n### Supported Features\n\n* **Scale
+      Your Cluster** - change the `size` parameter to [add or remove members](https://www.percona.com/doc/kubernetes-operator-for-psmongodb/scaling.html)
+      of the replica set. Three is the minimum recommended size for a functioning
+      replica set.\n\n* **Add Monitoring** - [Percona Monitoring and Management (PMM)
+      can be easily deployed](https://www.percona.com/doc/kubernetes-operator-for-psmongodb/monitoring.html)
+      to monitor your Percona Server for MongoDB replica set(s). The recommended installation
+      process uses Helm, the package manager for Kubernetes.\n\n* **Automate Your
+      Backups** - [configure automatic backups](https://www.percona.com/doc/kubernetes-operator-for-psmongodb/backups.html)
+      to run on a scheduled basis or run an on-demand backup at any time. Backups
+      are performed using Percona Backup for MongoDB (PBM) and can be stored on local
+      PVs or in any S3-compatible cloud storage provider. physical Backups - [configure
+      physical backups](https://docs.percona.com/percona-operator-for-mongodb/backups.html#physical)\n*
+      **Automated volume expansion Kubernetes supports the Persistent Volume expansion
+      as a stable feature since v1.24. Using it with the Operator  previously involved
+      manual operations. Now this is automated, and users can resize their PVCs by
+      just changing  the value of the resources.requests.storage option in the PerconaServerMongoDB
+      custom resource.  This feature is in a technical preview stage and is not recommended
+      for production environments.\n\n### Common Configurations\n\n* **Set Member
+      as Arbiter** - [Set up a replica set which contains an arbiter](https://www.percona.com/doc/kubernetes-operator-for-psmongodb/arbiter.html),
+      which participates in elections but does not store any data.  This reduces storage
+      costs while helping maintain replica set integrity.\n\n* **Expose Members Outside
+      K8S** - [by appropriately configuring the ServiceType](https://www.percona.com/doc/kubernetes-operator-for-psmongodb/expose.html)
+      you can expose replica set members outside of Kubernetes or provide statically
+      assigned IP addresses.\n\n* **Utilize Local Storage Options** - [with support
+      for Local Storage you can mount existing data directories](https://www.percona.com/doc/kubernetes-operator-for-psmongodb/storage.html)
+      into your replica set managed by Kubernetes or utilize high performance hardware
+      for local storage rather than network storage for your database.\n\n### Before
+      You Start\n\nAdd the PSMDB user `Secret` to Kubernetes. User information must
+      be placed in the data section of the `secrets.yaml`\nfile with Base64-encoded
+      logins and passwords for the user accounts.\n\nBelow is a sample `secrets.yaml`
+      file for the correct formatting.\n\n```\napiVersion: v1\nkind: Secret\nmetadata:\n
+      \ name: my-cluster-name-secrets\ntype: Opaque\ndata:\n  MONGODB_BACKUP_USER:
+      YmFja3Vw\n  MONGODB_BACKUP_PASSWORD: YmFja3VwMTIzNDU2\n  MONGODB_CLUSTER_ADMIN_USER:
+      Y2x1c3RlckFkbWlu\n  MONGODB_CLUSTER_ADMIN_PASSWORD: Y2x1c3RlckFkbWluMTIzNDU2\n
+      \ MONGODB_CLUSTER_MONITOR_USER: Y2x1c3Rlck1vbml0b3I=\n  MONGODB_CLUSTER_MONITOR_PASSWORD:
+      Y2x1c3Rlck1vbml0b3IxMjM0NTY=\n  MONGODB_USER_ADMIN_USER: dXNlckFkbWlu\n  MONGODB_USER_ADMIN_PASSWORD:
+      dXNlckFkbWluMTIzNDU2\n  PMM_SERVER_API_KEY: dXNlckFkbWluMTIzNDU2\n```\n### Release
+      Highlights * General availability of Physical Backups\n  Two releases ago we
+      added experimental support for Physical Backups and Restores to significantly
+      reduce Recovery Time Objective (RTO ),\n  especially for big data sets. With
+      this release Percona announces the general availability of physical backups
+      and restores for \n  Percona Server for MongoDB with the Operator.\n\n  * Automated
+      volume expansion\n  Kubernetes supports the Persistent Volume expansion as a
+      stable feature since v1.24. Using it with the Operator previously involved \n
+      \ manual operations. Now this is automated, and users can resize their PVCs
+      by just changing the value of the resources.requests.storage \n  option in the
+      PerconaServerMongoDB custom resource. This feature is in a technical preview
+      stage and is not recommended \n  for production environments.\n\n  * Support
+      for MongoDB 7\n  Starting from this release, MongoDB 7.0 is now supported. Read
+      our take on top-5 changes in MongoDB version 7 in this blog post .\n\n  * Support
+      for ARM architecture (technical preview)\n  ARM architecture meets the intensive
+      growth of its usage nowadays, both in a segment of highly efficient cloud computing
+      based on systems \n  like AWS Graviton, and the Internet of Things or Edge.
+      Officially certified images for ARM are now available for the Operator, \n  as
+      well as Percona Server for MongoDB and Percona Backup for MongoDB, while database
+      monitoring based on PMM Client is yet to follow.\n\n  * Fixing the overloaded
+      allowUnsafeConfigurations flag\n  In the previous Operator versions allowUnsafeConfigurations
+      Custom Resource option was used to allow configuring a cluster \n  with unsafe
+      parameters, such as starting it with less than 3 replica set instances. In fact,
+      setting this option to true \n  resulted in a wide range of reduced safety features
+      without the user’s explicit intent: disabling TLS, \n  allowing backups in unhealthy
+      clusters, etc.\n\n"
+    displayName: Percona Distribution for MongoDB Operator
+    installModes:
+    - supported: true
+      type: OwnNamespace
+    - supported: true
+      type: SingleNamespace
+    - supported: false
+      type: MultiNamespace
+    - supported: false
+      type: AllNamespaces
+    keywords:
+    - mongodb
+    - percona
+    - database
+    - replicaset
+    - shard
+    links:
+    - name: Percona
+      url: https://www.percona.com/
+    - name: Percona Kubernetes Operators Landing Page
+      url: https://www.percona.com/software/percona-kubernetes-operators
+    - name: Documentation
+      url: https://percona.github.io/percona-server-mongodb-operator/
+    - name: Github
+      url: https://github.com/percona/percona-server-mongodb-operator
+    maintainers:
+    - email: info@percona.com
+      name: Percona
+    maturity: stable
+    provider:
+      name: Percona
+relatedImages:
+- image: docker.io/percona/percona-server-mongodb-operator:1.16.0
+  name: ""
+- image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.16.0
   name: ""
 schema: olm.bundle
