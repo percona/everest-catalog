@@ -7,6 +7,5 @@ Fast:
   - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.16.0
 Stable:
   Bundles:
-  - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.14.0
   - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.15.0
   - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.16.0
