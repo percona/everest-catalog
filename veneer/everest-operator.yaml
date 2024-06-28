@@ -14,6 +14,7 @@ entries:
 - name: everest-operator.v1.0.0-rc3
 - name: everest-operator.v1.0.0-rc4
 - name: everest-operator.v1.0.0-rc5
+- name: everest-operator.v1.0.0-rc6
   replaces: everest-operator.v0.9.0
   skips:
   - everest-operator.v0.0.0
@@ -25,6 +26,7 @@ entries:
   - everest-operator.v1.0.0-rc2
   - everest-operator.v1.0.0-rc3
   - everest-operator.v1.0.0-rc4
+  - everest-operator.v1.0.0-rc5
 package: everest-operator
 schema: olm.channel
 ---
@@ -70,3 +72,6 @@ image: docker.io/perconalab/everest-operator-bundle:1.0.0-rc4
 ---
 schema: olm.bundle
 image: docker.io/perconalab/everest-operator-bundle:1.0.0-rc5
+---
+schema: olm.bundle
+image: docker.io/perconalab/everest-operator-bundle:1.0.0-rc6
