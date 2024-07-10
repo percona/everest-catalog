@@ -91,243 +91,223 @@ func TestMinor(t *testing.T) {
 	}
 }
 
-var patchStableExpected = `defaultChannel: stable-v0
-name: everest-operator
-schema: olm.package
----
+var patchStableExpected = `schema: olm.template.basic
 entries:
-    - name: everest-operator.v0.0.0
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1
-    - name: everest-operator.v0.9.2
-      replaces: everest-operator.v0.0.0
-      skips:
-        - everest-operator.v0.0.0
-        - everest-operator.v0.9.0
-        - everest-operator.v0.9.1
-name: fast-v0
-package: everest-operator
-schema: olm.channel
----
-entries:
-    - name: everest-operator.v0.0.0
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1-rc1
-      replaces: everest-operator.v0.0.0
-      skips:
-        - everest-operator.v0.0.0
-        - everest-operator.v0.9.0
-name: fast-v1
-package: everest-operator
-schema: olm.channel
----
-entries:
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1
-      skips:
-        - everest-operator.v0.9.0
-name: stable-v0
-package: everest-operator
-schema: olm.channel
----
-image: docker.io/perconalab/everest-operator-bundle:0.0.0
-schema: olm.bundle
----
-image: docker.io/perconalab/everest-operator-bundle:0.9.2
-schema: olm.bundle
----
+- schema: olm.package
+  defaultChannel: stable-v0
+  name: everest-operator
+- schema: olm.channel
+  name: fast-v0
+  entries:
+  - name: everest-operator.v0.0.0
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1
+  - name: everest-operator.v0.9.2
+    replaces: everest-operator.v0.0.0
+    skips:
+    - everest-operator.v0.0.0
+    - everest-operator.v0.9.0
+    - everest-operator.v0.9.1
+  package: everest-operator
+- schema: olm.channel
+  name: fast-v1
+  entries:
+  - name: everest-operator.v0.0.0
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1-rc1
+    replaces: everest-operator.v0.0.0
+    skips:
+    - everest-operator.v0.0.0
+    - everest-operator.v0.9.0
+  package: everest-operator
+- schema: olm.channel
+  name: stable-v0
+  entries:
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1
+    skips:
+    - everest-operator.v0.9.0
+  package: everest-operator
+- schema: olm.bundle
+  image: docker.io/perconalab/everest-operator-bundle:0.0.0
+- schema: olm.bundle
+  image: docker.io/perconalab/everest-operator-bundle:0.9.2
 `
 
-var patchStableRCExpected = `defaultChannel: stable-v0
-name: everest-operator
-schema: olm.package
----
+var patchStableRCExpected = `schema: olm.template.basic
 entries:
-    - name: everest-operator.v0.0.0
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1
-    - name: everest-operator.v0.9.2-rc1
-      replaces: everest-operator.v0.0.0
-      skips:
-        - everest-operator.v0.0.0
-        - everest-operator.v0.9.0
-        - everest-operator.v0.9.1
-name: fast-v0
-package: everest-operator
-schema: olm.channel
----
-entries:
-    - name: everest-operator.v0.0.0
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1-rc1
-      replaces: everest-operator.v0.0.0
-      skips:
-        - everest-operator.v0.0.0
-        - everest-operator.v0.9.0
-name: fast-v1
-package: everest-operator
-schema: olm.channel
----
-entries:
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1
-      skips:
-        - everest-operator.v0.9.0
-name: stable-v0
-package: everest-operator
-schema: olm.channel
----
-image: docker.io/perconalab/everest-operator-bundle:0.0.0
-schema: olm.bundle
----
-image: docker.io/perconalab/everest-operator-bundle:0.9.2-rc1
-schema: olm.bundle
----
+- schema: olm.package
+  defaultChannel: stable-v0
+  name: everest-operator
+- schema: olm.channel
+  name: fast-v0
+  entries:
+  - name: everest-operator.v0.0.0
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1
+  - name: everest-operator.v0.9.2-rc1
+    replaces: everest-operator.v0.0.0
+    skips:
+    - everest-operator.v0.0.0
+    - everest-operator.v0.9.0
+    - everest-operator.v0.9.1
+  package: everest-operator
+- schema: olm.channel
+  name: fast-v1
+  entries:
+  - name: everest-operator.v0.0.0
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1-rc1
+    replaces: everest-operator.v0.0.0
+    skips:
+    - everest-operator.v0.0.0
+    - everest-operator.v0.9.0
+  package: everest-operator
+- schema: olm.channel
+  name: stable-v0
+  entries:
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1
+    skips:
+    - everest-operator.v0.9.0
+  package: everest-operator
+- schema: olm.bundle
+  image: docker.io/perconalab/everest-operator-bundle:0.0.0
+- schema: olm.bundle
+  image: docker.io/perconalab/everest-operator-bundle:0.9.2-rc1
 `
 
-var patchRCExpected = `defaultChannel: stable-v0
-name: everest-operator
-schema: olm.package
----
+var patchRCExpected = `schema: olm.template.basic
 entries:
-    - name: everest-operator.v0.0.0
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1
-      replaces: everest-operator.v0.0.0
-      skips:
-        - everest-operator.v0.0.0
-        - everest-operator.v0.9.0
-name: fast-v0
-package: everest-operator
-schema: olm.channel
----
-entries:
-    - name: everest-operator.v0.0.0
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1-rc1
-    - name: everest-operator.v0.9.1-rc2
-      replaces: everest-operator.v0.0.0
-      skips:
-        - everest-operator.v0.0.0
-        - everest-operator.v0.9.0
-        - everest-operator.v0.9.1-rc1
-name: fast-v1
-package: everest-operator
-schema: olm.channel
----
-entries:
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1
-      skips:
-        - everest-operator.v0.9.0
-name: stable-v0
-package: everest-operator
-schema: olm.channel
----
-image: docker.io/perconalab/everest-operator-bundle:0.0.0
-schema: olm.bundle
----
-image: docker.io/perconalab/everest-operator-bundle:0.9.1-rc2
-schema: olm.bundle
----
+- schema: olm.package
+  defaultChannel: stable-v0
+  name: everest-operator
+- schema: olm.channel
+  name: fast-v0
+  entries:
+  - name: everest-operator.v0.0.0
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1
+    replaces: everest-operator.v0.0.0
+    skips:
+    - everest-operator.v0.0.0
+    - everest-operator.v0.9.0
+  package: everest-operator
+- schema: olm.channel
+  name: fast-v1
+  entries:
+  - name: everest-operator.v0.0.0
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1-rc1
+  - name: everest-operator.v0.9.1-rc2
+    replaces: everest-operator.v0.0.0
+    skips:
+    - everest-operator.v0.0.0
+    - everest-operator.v0.9.0
+    - everest-operator.v0.9.1-rc1
+  package: everest-operator
+- schema: olm.channel
+  name: stable-v0
+  entries:
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1
+    skips:
+    - everest-operator.v0.9.0
+  package: everest-operator
+- schema: olm.bundle
+  image: docker.io/perconalab/everest-operator-bundle:0.0.0
+- schema: olm.bundle
+  image: docker.io/perconalab/everest-operator-bundle:0.9.1-rc2
 `
 
-var minorStableExpected = `defaultChannel: stable-v0
-name: everest-operator
-schema: olm.package
----
+var minorStableExpected = `schema: olm.template.basic
 entries:
-    - name: everest-operator.v0.0.0
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1
-      replaces: everest-operator.v0.0.0
-      skips:
-        - everest-operator.v0.0.0
-        - everest-operator.v0.9.0
-    - name: everest-operator.v0.10.0
-      replaces: everest-operator.v0.9.0
-      skips:
-        - everest-operator.v0.9.0
-        - everest-operator.v0.9.1
-name: fast-v0
-package: everest-operator
-schema: olm.channel
----
-entries:
-    - name: everest-operator.v0.0.0
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1-rc1
-      replaces: everest-operator.v0.0.0
-      skips:
-        - everest-operator.v0.0.0
-        - everest-operator.v0.9.0
-name: fast-v1
-package: everest-operator
-schema: olm.channel
----
-entries:
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1
-      skips:
-        - everest-operator.v0.9.0
-name: stable-v0
-package: everest-operator
-schema: olm.channel
----
-image: docker.io/perconalab/everest-operator-bundle:0.0.0
-schema: olm.bundle
----
-image: docker.io/perconalab/everest-operator-bundle:0.10.0
-schema: olm.bundle
----
+- schema: olm.package
+  defaultChannel: stable-v0
+  name: everest-operator
+- schema: olm.channel
+  name: fast-v0
+  entries:
+  - name: everest-operator.v0.0.0
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1
+    replaces: everest-operator.v0.0.0
+    skips:
+    - everest-operator.v0.0.0
+    - everest-operator.v0.9.0
+  - name: everest-operator.v0.10.0
+    replaces: everest-operator.v0.9.0
+    skips:
+	- everest-operator.v0.9.0
+	- everest-operator.v0.9.1
+  package: everest-operator
+- schema: olm.channel
+  name: fast-v1
+  entries:
+  - name: everest-operator.v0.0.0
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1-rc1
+    replaces: everest-operator.v0.0.0
+    skips:
+    - everest-operator.v0.0.0
+    - everest-operator.v0.9.0
+  package: everest-operator
+- schema: olm.channel
+  name: stable-v0
+  entries:
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1
+    skips:
+    - everest-operator.v0.9.0
+  package: everest-operator
+- schema: olm.bundle
+  image: docker.io/perconalab/everest-operator-bundle:0.0.0
+- schema: olm.bundle
+  image: docker.io/perconalab/everest-operator-bundle:0.10.0
 `
 
-var minorStableRCExpected = `defaultChannel: stable-v0
-name: everest-operator
-schema: olm.package
----
+var minorStableRCExpected = `schema: olm.template.basic
 entries:
-    - name: everest-operator.v0.0.0
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1
-      replaces: everest-operator.v0.0.0
-      skips:
-        - everest-operator.v0.0.0
-        - everest-operator.v0.9.0
-    - name: everest-operator.v0.10.0-rc1
-      replaces: everest-operator.v0.9.0
-      skips:
-        - everest-operator.v0.9.0
-        - everest-operator.v0.9.1
-name: fast-v0
-package: everest-operator
-schema: olm.channel
----
-entries:
-    - name: everest-operator.v0.0.0
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1-rc1
-      replaces: everest-operator.v0.0.0
-      skips:
-        - everest-operator.v0.0.0
-        - everest-operator.v0.9.0
-name: fast-v1
-package: everest-operator
-schema: olm.channel
----
-entries:
-    - name: everest-operator.v0.9.0
-    - name: everest-operator.v0.9.1
-      skips:
-        - everest-operator.v0.9.0
-name: stable-v0
-package: everest-operator
-schema: olm.channel
----
-image: docker.io/perconalab/everest-operator-bundle:0.0.0
-schema: olm.bundle
----
-image: docker.io/perconalab/everest-operator-bundle:0.10.0-rc1
-schema: olm.bundle
----
+- schema: olm.package
+  defaultChannel: stable-v0
+  name: everest-operator
+- schema: olm.channel
+  name: fast-v0
+  entries:
+  - name: everest-operator.v0.0.0
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1
+    replaces: everest-operator.v0.0.0
+    skips:
+    - everest-operator.v0.0.0
+    - everest-operator.v0.9.0
+  - name: everest-operator.v0.10.0-rc1
+    replaces: everest-operator.v0.9.0
+    skips:
+	- everest-operator.v0.9.0
+	- everest-operator.v0.9.1
+  package: everest-operator
+- schema: olm.channel
+  name: fast-v1
+  entries:
+  - name: everest-operator.v0.0.0
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1-rc1
+    replaces: everest-operator.v0.0.0
+    skips:
+    - everest-operator.v0.0.0
+    - everest-operator.v0.9.0
+  package: everest-operator
+- schema: olm.channel
+  name: stable-v0
+  entries:
+  - name: everest-operator.v0.9.0
+  - name: everest-operator.v0.9.1
+    skips:
+    - everest-operator.v0.9.0
+  package: everest-operator
+- schema: olm.bundle
+  image: docker.io/perconalab/everest-operator-bundle:0.0.0
+- schema: olm.bundle
+  image: docker.io/perconalab/everest-operator-bundle:0.10.0-rc1
 `
