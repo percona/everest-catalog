@@ -1,23 +1,17 @@
 package main
 
 import (
-	"bytes"
-	"errors"
 	"fmt"
-	"io"
+	"gopkg.in/yaml.v3"
 	"os"
 	"strings"
 
 	goversion "github.com/hashicorp/go-version"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 )
-
-const imageNameTemplate = "docker.io/perconalab/everest-operator-bundle:%s"
 
 func main() {
 	var (
-		versionType    string
 		newVersion     string
 		currentVersion string
 		channel        string
@@ -32,25 +26,16 @@ func main() {
 				b   []byte
 				err error
 			)
-			switch strings.ToLower(versionType) {
-			case "minor":
-				b, err = createMinorVersionVeneer(veneerFile, channel, currentVersion, newVersion)
-			case "patch":
-				b, err = createPatchVersionVeneer(veneerFile, channel, currentVersion, newVersion)
-			default:
-				panic("version-type is required")
-			}
 
+			b, err = updateVeneer(veneerFile, channel, currentVersion, newVersion)
 			if err != nil {
 				panic(err)
 			}
 
-			out := strings.TrimSuffix(string(b), "---\n")
-			fmt.Println(out)
+			fmt.Println(string(b))
 		},
 	}
 
-	rootCmd.Flags().StringVar(&versionType, "version-type", "", "New version type, either minor or patch")
 	rootCmd.Flags().StringVar(&newVersion, "new-version", "", "New version (e.g. 0.10.0)")
 	rootCmd.Flags().StringVar(&currentVersion, "current-version", "", "Current version (e.g. 0.9.5)")
 	rootCmd.Flags().StringVar(&channel, "channel", "", "Channel to update (e.g. stable-v0)")
@@ -61,215 +46,110 @@ func main() {
 	}
 }
 
-func createPatchVersionVeneer(veneerFile, channel, currentVersion, newVersion string) ([]byte, error) {
+type Entry struct {
+	Schema         string    `yaml:"schema"`
+	DefaultChannel string    `yaml:"defaultChannel,omitempty"`
+	Name           string    `yaml:"name,omitempty"`
+	Versions       []Version `yaml:"entries,omitempty"`
+	Package        string    `yaml:"package,omitempty"`
+	Image          string    `yaml:"image,omitempty"`
+}
+
+type Template struct {
+	Schema  string  `yaml:"schema"`
+	Entries []Entry `yaml:"entries"`
+}
+
+type Version struct {
+	Name     string   `yaml:"name"`
+	Replaces string   `yaml:"replaces,omitempty"`
+	Skips    []string `yaml:"skips,omitempty"`
+}
+
+const (
+	olmChannelSchema = "olm.channel"
+	olmBundleSchema  = "olm.bundle"
+
+	versionPrefix = "everest-operator.v"
+
+	rcBundle      = "docker.io/perconalab/everest-operator-bundle:"
+	releaseBundle = "docker.io/percona/everest-operator-bundle:"
+)
+
+func updateVeneer(veneerFile, channel, currentVersionStr, newVersionStr string) ([]byte, error) {
+	release, err := validateVersion(currentVersionStr, newVersionStr)
+	if err != nil {
+		return nil, fmt.Errorf("%s: invalid version format: %w", newVersionStr, err)
+	}
+
 	source, err := os.ReadFile(veneerFile)
 	if err != nil {
 		return nil, fmt.Errorf("could not read veneer file: %w", err)
 	}
 
-	ret, err := updateVeneerFile(source, "olm.channel", "name", channel, func(m map[string]any) (map[string]any, error) {
-		entries, ok := m["entries"]
-		if !ok {
-			return nil, errors.New("could not find entries")
-		}
-
-		eSlice, ok := entries.([]any)
-		if !ok {
-			return nil, errors.New("could not assert to slice")
-		}
-
-		i, e, err := findEntry(eSlice, currentVersion)
-		if err != nil {
-			return nil, err
-		}
-
-		// Keep just the name config in the current version
-		eSlice[i] = map[string]any{"name": e["name"]}
-
-		// Create a copy of the current version and rename to new version
-		newEntry := e
-		newEntry["name"] = fmt.Sprintf("everest-operator.v%s", newVersion)
-
-		// Add current version to skips
-		skips, ok := newEntry["skips"]
-		if !ok {
-			skips = []string{}
-		}
-
-		skipsSlice, ok := skips.([]any)
-		if !ok {
-			return nil, errors.New("could not assert skips to slice")
-		}
-
-		newEntry["skips"] = append(skipsSlice, fmt.Sprintf("everest-operator.v%s", currentVersion))
-
-		eSlice = append(eSlice, newEntry)
-		m["entries"] = eSlice
-
-		return m, nil
-	})
-
+	var template Template
+	err = yaml.Unmarshal(source, &template)
 	if err != nil {
+		fmt.Println("Error unmarshalling YAML:", err)
 		return nil, err
 	}
 
-	return addOLMBundle(ret, newVersion)
+	for i, schema := range template.Entries {
+		if schema.Schema == olmChannelSchema && schema.Name == channel {
+			if len(schema.Versions) == 0 {
+				return nil, fmt.Errorf("versions list is empty for %s channel", channel)
+			}
+			lastVersion := schema.Versions[len(schema.Versions)-1]
+			// new version inherits the replaces from the last version and adds a new skip to the skips
+			newVersion := Version{
+				Name:     versionPrefix + release.newVersion.String(),
+				Replaces: lastVersion.Replaces,
+				Skips:    append(lastVersion.Skips, lastVersion.Name),
+			}
+			// the previous version shouldn't have any replaces and skips anymore
+			schema.Versions[len(schema.Versions)-1].Replaces = ""
+			schema.Versions[len(schema.Versions)-1].Skips = nil
+			// add the new version to the list of versions
+			schema.Versions = append(schema.Versions, newVersion)
+			template.Entries[i] = schema
+			break
+		}
+	}
+
+	template.Entries = append(template.Entries, Entry{Schema: olmBundleSchema, Image: release.image()})
+	return yaml.Marshal(template)
 }
 
-func createMinorVersionVeneer(veneerFile, channel, currentVersion, newVersion string) ([]byte, error) {
-	source, err := os.ReadFile(veneerFile)
+type release struct {
+	isRC            bool
+	newVersion      goversion.Version
+	previousVersion goversion.Version
+}
+
+func (r release) image() string {
+	version := r.newVersion.String()
+	if r.isRC {
+		return rcBundle + version
+	}
+	return releaseBundle + version
+}
+
+func validateVersion(currentVersionStr, newVersionStr string) (release, error) {
+	result := release{}
+	currentVersion, err := goversion.NewVersion(currentVersionStr)
 	if err != nil {
-		return nil, fmt.Errorf("could not read veneer file: %w", err)
+		return result, fmt.Errorf("%s: can not parse current version: %w", currentVersionStr, err)
 	}
 
-	ret, err := updateVeneerFile(source, "olm.channel", "name", channel, func(m map[string]any) (map[string]any, error) {
-		entries, ok := m["entries"]
-		if !ok {
-			return nil, errors.New("could not find entries")
-		}
-
-		eSlice, ok := entries.([]any)
-		if !ok {
-			return nil, errors.New("could not assert to slice")
-		}
-
-		v, err := goversion.NewVersion(currentVersion)
-		if err != nil {
-			return nil, errors.Join(err, errors.New("could not parse current version"))
-		}
-
-		seg := v.Segments()
-		skips := make([]string, 0, 10)
-		for _, es := range eSlice {
-			e, ok := es.(map[string]any)
-			if !ok {
-				return nil, errors.New("could not assert to map")
-			}
-
-			nameA, ok := e["name"]
-			if !ok {
-				continue
-			}
-
-			name, ok := nameA.(string)
-			if !ok {
-				continue
-			}
-
-			if strings.HasPrefix(name, fmt.Sprintf("everest-operator.v%d.%d.", seg[0], seg[1])) {
-				skips = append(skips, name)
-			}
-		}
-
-		newEntry := map[string]any{
-			"name":     fmt.Sprintf("everest-operator.v%s", newVersion),
-			"replaces": fmt.Sprintf("everest-operator.v%d.%d.0", seg[0], seg[1]),
-			"skips":    skips,
-		}
-
-		m["entries"] = append(eSlice, newEntry)
-
-		return m, nil
-	})
-
+	newVersion, err := goversion.NewVersion(newVersionStr)
 	if err != nil {
-		return nil, err
+		return result, fmt.Errorf("%s: can not parse new version: %w", newVersionStr, err)
 	}
 
-	return addOLMBundle(ret, newVersion)
-}
-
-func findEntry(entries []any, version string) (int, map[string]any, error) {
-	for i, es := range entries {
-		e, ok := es.(map[string]any)
-		if !ok {
-			return 0, nil, errors.New("could not assert to map")
-		}
-
-		// Find document by name
-		name, ok := e["name"]
-		if !ok {
-			continue
-		}
-		if name != fmt.Sprintf("everest-operator.v%s", version) {
-			continue
-		}
-
-		return i, e, nil
+	if strings.Contains(newVersionStr, "rc") {
+		result.isRC = true
 	}
-
-	return 0, nil, errors.New("not found")
-}
-
-func updateVeneerFile(veneerFile []byte, schema, fieldName, fieldValue string, replace func(map[string]any) (map[string]any, error)) ([]byte, error) {
-	d := yaml.NewDecoder(bytes.NewReader(veneerFile))
-	docs := make([]map[string]any, 0, 10)
-	for {
-		var doc map[string]any
-		if err := d.Decode(&doc); err != nil {
-			if errors.Is(err, io.EOF) {
-				break
-			}
-			return nil, fmt.Errorf("could not decode yaml: %w", err)
-		}
-
-		if s, ok := doc["schema"]; !ok || s != schema {
-			docs = append(docs, doc)
-			continue
-		}
-
-		if f, ok := doc[fieldName]; !ok || f != fieldValue {
-			docs = append(docs, doc)
-			continue
-		}
-
-		replacement, err := replace(doc)
-		if err != nil {
-			return nil, err
-		}
-		docs = append(docs, replacement)
-	}
-
-	b := &bytes.Buffer{}
-	for _, d := range docs {
-		db, err := yaml.Marshal(d)
-		if err != nil {
-			return nil, fmt.Errorf("could not marshal yaml: %w", err)
-		}
-		if _, err := b.Write(db); err != nil {
-			return nil, fmt.Errorf("could not write yaml: %w", err)
-		}
-		if _, err := b.WriteString("---\n"); err != nil {
-			return nil, fmt.Errorf("could not write doc separator: %w", err)
-		}
-	}
-
-	return b.Bytes(), nil
-}
-
-func addOLMBundle(veneeerContents []byte, newVersion string) ([]byte, error) {
-	ret := veneeerContents
-
-	var (
-		foundImage bool
-		imageName  = fmt.Sprintf(imageNameTemplate, newVersion)
-	)
-
-	_, err := updateVeneerFile(veneeerContents, "olm.bundle", "image", imageName, func(m map[string]any) (map[string]any, error) {
-		foundImage = true
-		return m, nil
-	})
-	if err != nil {
-		return nil, errors.Join(err, errors.New("could not find olm.bundle"))
-	}
-
-	if !foundImage {
-		ret = append(ret, []byte(fmt.Sprintf(
-			"image: %s\n"+
-				"schema: olm.bundle\n"+
-				"---\n", imageName,
-		))...)
-	}
-
-	return ret, nil
+	result.newVersion = *newVersion
+	result.previousVersion = *currentVersion
+	return result, nil
 }
