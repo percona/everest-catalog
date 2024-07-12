@@ -61,12 +61,7 @@ func (t *EverestBasicTemplate) update(release release, channel string) error {
 		}
 	}
 
-	bundle, err := release.bundle()
-	if err != nil {
-		return fmt.Errorf("failed to create new bundle: %w", err)
-	}
-	t.Entries = append(t.Entries, bundle)
-	return nil
+	return t.addBundle(release)
 }
 
 func (t *EverestBasicTemplate) currentVersion(channel string) string {
@@ -106,4 +101,26 @@ func updateBlob(channelBlob json.RawMessage, release release, channel string) ([
 	// add the new version to the list of versions
 	ch.Entries = append(ch.Entries, newVersion)
 	return json.Marshal(ch)
+}
+
+func (t *EverestBasicTemplate) addBundle(r release) error {
+	for _, entry := range t.Entries {
+		var b declcfg.Bundle
+		err := json.Unmarshal(entry.Blob, &b)
+		if err != nil {
+			continue
+		}
+		if b.Image == r.image() {
+			// if there is already such a bundle defined - do nothing
+			// it might happen when two channels are being updated separately with the same version.
+			return nil
+		}
+	}
+	bundle, err := r.bundle()
+	if err != nil {
+		return fmt.Errorf("failed to create new bundle: %w", err)
+	}
+
+	t.Entries = append(t.Entries, bundle)
+	return nil
 }
