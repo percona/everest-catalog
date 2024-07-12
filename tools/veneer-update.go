@@ -7,10 +7,9 @@ import (
 
 func main() {
 	var (
-		newVersion     string
-		currentVersion string
-		channel        string
-		veneerFile     string
+		newVersion string
+		channel    string
+		veneerFile string
 	)
 
 	rootCmd := &cobra.Command{
@@ -22,7 +21,7 @@ func main() {
 				err error
 			)
 
-			b, err = updateVeneer(veneerFile, channel, currentVersion, newVersion)
+			b, err = updateVeneer(veneerFile, channel, newVersion)
 			if err != nil {
 				panic(err)
 			}
@@ -32,7 +31,6 @@ func main() {
 	}
 
 	rootCmd.Flags().StringVar(&newVersion, "new-version", "", "New version (e.g. 0.10.0)")
-	rootCmd.Flags().StringVar(&currentVersion, "current-version", "", "Current version (e.g. 0.9.5)")
 	rootCmd.Flags().StringVar(&channel, "channel", "", "Channel to update (e.g. stable-v0)")
 	rootCmd.Flags().StringVar(&veneerFile, "veneer-file", "", "Path to veneer file")
 
@@ -41,17 +39,17 @@ func main() {
 	}
 }
 
-func updateVeneer(veneerFile, channel, currentVersionStr, newVersionStr string) ([]byte, error) {
-	var r release
-	err := r.create(currentVersionStr, newVersionStr)
-	if err != nil {
-		return nil, fmt.Errorf("%s: invalid version format: %w", newVersionStr, err)
-	}
-
+func updateVeneer(veneerFile, channel, newVersionStr string) ([]byte, error) {
 	var t EverestBasicTemplate
-	err = t.readFromFile(veneerFile)
+	err := t.readFromFile(veneerFile)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read template: %w", err)
+	}
+
+	var r release
+	err = r.create(t.currentVersion(channel), newVersionStr)
+	if err != nil {
+		return nil, fmt.Errorf("%s: invalid version format: %w", newVersionStr, err)
 	}
 
 	err = t.update(r, channel)
