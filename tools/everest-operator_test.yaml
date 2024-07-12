@@ -1,11 +1,8 @@
-schema: olm.template.basic
 entries:
-  - schema: olm.package
-    defaultChannel: stable-v0
+  - defaultChannel: stable-v0
     name: everest-operator
-  - schema: olm.channel
-    name: fast-v0
-    entries:
+    schema: olm.package
+  - entries:
       - name: everest-operator.v0.0.0
       - name: everest-operator.v0.9.0
       - name: everest-operator.v0.9.1
@@ -13,10 +10,10 @@ entries:
         skips:
           - everest-operator.v0.0.0
           - everest-operator.v0.9.0
+    name: fast-v0
     package: everest-operator
-  - schema: olm.channel
-    name: fast-v1
-    entries:
+    schema: olm.channel
+  - entries:
       - name: everest-operator.v0.0.0
       - name: everest-operator.v0.9.0
       - name: everest-operator.v0.9.1-rc1
@@ -24,14 +21,17 @@ entries:
         skips:
           - everest-operator.v0.0.0
           - everest-operator.v0.9.0
+    name: fast-v1
     package: everest-operator
-  - schema: olm.channel
-    name: stable-v0
-    entries:
+    schema: olm.channel
+  - entries:
       - name: everest-operator.v0.9.0
       - name: everest-operator.v0.9.1
         skips:
           - everest-operator.v0.9.0
+    name: stable-v0
     package: everest-operator
-  - schema: olm.bundle
-    image: docker.io/perconalab/everest-operator-bundle:0.0.0
+    schema: olm.channel
+  - image: docker.io/perconalab/everest-operator-bundle:0.0.0
+    schema: olm.bundle
+schema: olm.template.basic

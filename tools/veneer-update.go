@@ -2,11 +2,6 @@ package main
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v3"
-	"os"
-	"strings"
-
-	goversion "github.com/hashicorp/go-version"
 	"github.com/spf13/cobra"
 )
 
@@ -46,110 +41,23 @@ func main() {
 	}
 }
 
-type Entry struct {
-	Schema         string    `yaml:"schema"`
-	DefaultChannel string    `yaml:"defaultChannel,omitempty"`
-	Name           string    `yaml:"name,omitempty"`
-	Versions       []Version `yaml:"entries,omitempty"`
-	Package        string    `yaml:"package,omitempty"`
-	Image          string    `yaml:"image,omitempty"`
-}
-
-type Template struct {
-	Schema  string  `yaml:"schema"`
-	Entries []Entry `yaml:"entries"`
-}
-
-type Version struct {
-	Name     string   `yaml:"name"`
-	Replaces string   `yaml:"replaces,omitempty"`
-	Skips    []string `yaml:"skips,omitempty"`
-}
-
-const (
-	olmChannelSchema = "olm.channel"
-	olmBundleSchema  = "olm.bundle"
-
-	versionPrefix = "everest-operator.v"
-
-	rcBundle      = "docker.io/perconalab/everest-operator-bundle:"
-	releaseBundle = "docker.io/percona/everest-operator-bundle:"
-)
-
 func updateVeneer(veneerFile, channel, currentVersionStr, newVersionStr string) ([]byte, error) {
-	release, err := validateVersion(currentVersionStr, newVersionStr)
+	var r release
+	err := r.create(currentVersionStr, newVersionStr)
 	if err != nil {
 		return nil, fmt.Errorf("%s: invalid version format: %w", newVersionStr, err)
 	}
 
-	source, err := os.ReadFile(veneerFile)
+	var t EverestBasicTemplate
+	err = t.readFromFile(veneerFile)
 	if err != nil {
-		return nil, fmt.Errorf("could not read veneer file: %w", err)
+		return nil, fmt.Errorf("failed to read template: %w", err)
 	}
 
-	var template Template
-	err = yaml.Unmarshal(source, &template)
+	err = t.update(r, channel)
 	if err != nil {
-		fmt.Println("Error unmarshalling YAML:", err)
-		return nil, err
+		return nil, fmt.Errorf("failed to update template: %w", err)
 	}
 
-	for i, schema := range template.Entries {
-		if schema.Schema == olmChannelSchema && schema.Name == channel {
-			if len(schema.Versions) == 0 {
-				return nil, fmt.Errorf("versions list is empty for %s channel", channel)
-			}
-			lastVersion := schema.Versions[len(schema.Versions)-1]
-			// new version inherits the replaces from the last version and adds a new skip to the skips
-			newVersion := Version{
-				Name:     versionPrefix + release.newVersion.String(),
-				Replaces: lastVersion.Replaces,
-				Skips:    append(lastVersion.Skips, lastVersion.Name),
-			}
-			// the previous version shouldn't have any replaces and skips anymore
-			schema.Versions[len(schema.Versions)-1].Replaces = ""
-			schema.Versions[len(schema.Versions)-1].Skips = nil
-			// add the new version to the list of versions
-			schema.Versions = append(schema.Versions, newVersion)
-			template.Entries[i] = schema
-			break
-		}
-	}
-
-	template.Entries = append(template.Entries, Entry{Schema: olmBundleSchema, Image: release.image()})
-	return yaml.Marshal(template)
-}
-
-type release struct {
-	isRC            bool
-	newVersion      goversion.Version
-	previousVersion goversion.Version
-}
-
-func (r release) image() string {
-	version := r.newVersion.String()
-	if r.isRC {
-		return rcBundle + version
-	}
-	return releaseBundle + version
-}
-
-func validateVersion(currentVersionStr, newVersionStr string) (release, error) {
-	result := release{}
-	currentVersion, err := goversion.NewVersion(currentVersionStr)
-	if err != nil {
-		return result, fmt.Errorf("%s: can not parse current version: %w", currentVersionStr, err)
-	}
-
-	newVersion, err := goversion.NewVersion(newVersionStr)
-	if err != nil {
-		return result, fmt.Errorf("%s: can not parse new version: %w", newVersionStr, err)
-	}
-
-	if strings.Contains(newVersionStr, "rc") {
-		result.isRC = true
-	}
-	result.newVersion = *newVersion
-	result.previousVersion = *currentVersion
-	return result, nil
+	return t.toByteArray()
 }
