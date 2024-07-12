@@ -12,49 +12,42 @@ func TestPatch(t *testing.T) {
 	testcases := []struct {
 		name           string
 		channel        string
-		currentVersion string
 		newVersion     string
 		expectedOutput string
 	}{
 		{
 			name:           "Non-rc patch release",
 			channel:        "fast-v0",
-			currentVersion: "0.9.1",
 			newVersion:     "0.9.2",
 			expectedOutput: nonRCPatchExpected,
 		},
 		{
 			name:           "RC patch release over non-rc release",
 			channel:        "fast-v0",
-			currentVersion: "0.9.1",
 			newVersion:     "0.9.2-rc1",
 			expectedOutput: rcPatchOverNonRCExpected,
 		},
 		{
 			name:           "RC patch version over RC",
 			channel:        "fast-v1",
-			currentVersion: "0.9.1-rc1",
 			newVersion:     "0.9.1-rc2",
 			expectedOutput: rcOverRcPatchExpected,
 		},
 		{
 			name:           "Non-RC minor release",
 			channel:        "fast-v0",
-			currentVersion: "0.9.1",
 			newVersion:     "0.10.0",
 			expectedOutput: nonRCMinorExpected,
 		},
 		{
 			name:           "Minor release's first RC",
 			channel:        "fast-v0",
-			currentVersion: "0.9.1",
 			newVersion:     "0.10.0-rc1",
 			expectedOutput: minorReleasesFirstRCExpected,
 		},
 		{
 			name:           "Minor release stable channel",
 			channel:        "stable-v0",
-			currentVersion: "0.9.1",
 			newVersion:     "0.10.0",
 			expectedOutput: minorReleaseStableChannelExpected,
 		},
@@ -64,7 +57,7 @@ func TestPatch(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			b, err := updateVeneer("./everest-operator_test.yaml", tt.channel, tt.currentVersion, tt.newVersion)
+			b, err := updateVeneer("./everest-operator_test.yaml", tt.channel, tt.newVersion)
 			require.NoError(t, err)
 			actual := string(b)
 			require.Equal(t, tt.expectedOutput, actual)

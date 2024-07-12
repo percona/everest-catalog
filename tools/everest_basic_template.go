@@ -7,6 +7,7 @@ import (
 	"github.com/operator-framework/operator-registry/alpha/template/basic"
 	"gopkg.in/yaml.v3"
 	"os"
+	"strings"
 )
 
 const versionPrefix = "everest-operator.v"
@@ -66,6 +67,20 @@ func (t *EverestBasicTemplate) update(release release, channel string) error {
 	}
 	t.Entries = append(t.Entries, bundle)
 	return nil
+}
+
+func (t *EverestBasicTemplate) currentVersion(channel string) string {
+	for _, meta := range t.Entries {
+		if meta.Schema == declcfg.SchemaChannel && meta.Name == channel {
+			var ch declcfg.Channel
+			err := json.Unmarshal(meta.Blob, &ch)
+			if err != nil {
+				return ""
+			}
+			return strings.TrimPrefix(ch.Entries[len(ch.Entries)-1].Name, versionPrefix)
+		}
+	}
+	return ""
 }
 
 func updateBlob(channelBlob json.RawMessage, release release, channel string) ([]byte, error) {
