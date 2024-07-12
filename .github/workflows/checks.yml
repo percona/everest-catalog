@@ -24,7 +24,7 @@ jobs:
       - name: Check default main state - generated files
         run: |
           echo "Download opm tool"
-          curl -Lo /tmp/opm https://github.com/operator-framework/operator-registry/releases/latest/download/linux-amd64-opm
+          curl -Lo /tmp/opm https://github.com/operator-framework/operator-registry/releases/v1.44.0/download/linux-amd64-opm
           chmod +x /tmp/opm
           echo "Render catalog"
           /tmp/opm alpha render-template basic -o yaml ./veneer/everest-operator.yaml > ./catalog/everest-operator/catalog.yaml
