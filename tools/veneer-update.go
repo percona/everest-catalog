@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 func main() {
@@ -16,17 +17,10 @@ func main() {
 		Use:   "veneer-update",
 		Short: "Prints an updated veneer file which adds a minor or a patch version to the entries list",
 		Run: func(cmd *cobra.Command, args []string) {
-			var (
-				b   []byte
-				err error
-			)
-
-			b, err = updateVeneer(veneerFile, channel, newVersion)
+			err := updateVeneer(veneerFile, channel, newVersion)
 			if err != nil {
 				panic(err)
 			}
-
-			fmt.Println(string(b))
 		},
 	}
 
@@ -39,23 +33,28 @@ func main() {
 	}
 }
 
-func updateVeneer(veneerFile, channel, newVersionStr string) ([]byte, error) {
+func updateVeneer(veneerFile, channel, newVersionStr string) error {
 	var t EverestBasicTemplate
 	err := t.readFromFile(veneerFile)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read template: %w", err)
+		return fmt.Errorf("failed to read template: %w", err)
 	}
 
 	var r release
 	err = r.create(t.currentVersion(channel), newVersionStr)
 	if err != nil {
-		return nil, fmt.Errorf("%s: invalid version format: %w", newVersionStr, err)
+		return fmt.Errorf("%s: invalid version format: %w", newVersionStr, err)
 	}
 
 	err = t.update(r, channel)
 	if err != nil {
-		return nil, fmt.Errorf("failed to update template: %w", err)
+		return fmt.Errorf("failed to update template: %w", err)
 	}
 
-	return t.toByteArray()
+	b, err := t.toByteArray()
+	if err != nil {
+		return fmt.Errorf("failed to convert data: %w", err)
+	}
+
+	return os.WriteFile(veneerFile, b, 0644)
 }
