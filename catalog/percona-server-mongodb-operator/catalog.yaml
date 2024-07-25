@@ -5,16 +5,20 @@ schema: olm.package
 ---
 entries:
 - name: percona-server-mongodb-operator.v1.15.0
-- name: percona-server-mongodb-operator.v1.16.0
+- name: percona-server-mongodb-operator.v1.16.2
   replaces: percona-server-mongodb-operator.v1.15.0
+  skips:
+  - percona-server-mongodb-operator.v1.15.0
 name: fast-v1
 package: percona-server-mongodb-operator
 schema: olm.channel
 ---
 entries:
 - name: percona-server-mongodb-operator.v1.15.0
-- name: percona-server-mongodb-operator.v1.16.0
+- name: percona-server-mongodb-operator.v1.16.2
   replaces: percona-server-mongodb-operator.v1.15.0
+  skips:
+  - percona-server-mongodb-operator.v1.15.0
 name: stable-v1
 package: percona-server-mongodb-operator
 schema: olm.channel
@@ -492,8 +496,8 @@ relatedImages:
   name: ""
 schema: olm.bundle
 ---
-image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.16.0
-name: percona-server-mongodb-operator.v1.16.0
+image: docker.io/perconalab/percona-server-mongodb-operator:1.16.2-community-bundle
+name: percona-server-mongodb-operator.v1.16.2
 package: percona-server-mongodb-operator
 properties:
 - type: olm.gvk
@@ -569,7 +573,7 @@ properties:
 - type: olm.package
   value:
     packageName: percona-server-mongodb-operator
-    version: 1.16.0
+    version: 1.16.2
 - type: olm.csv.metadata
   value:
     annotations:
@@ -585,7 +589,7 @@ properties:
               ]
             },
             "spec": {
-              "crVersion": "1.16.0",
+              "crVersion": "1.16.2",
               "image": "docker.io/percona/percona-server-mongodb:7.0.8-5",
               "imagePullPolicy": "Always",
               "allowUnsafeConfigurations": false,
@@ -786,11 +790,21 @@ properties:
       capabilities: Deep Insights
       categories: Database
       certified: "true"
-      containerImage: docker.io/percona/percona-server-mongodb-operator:1.16.0
-      createdAt: "2024-05-28T10:35:26.000Z"
+      containerImage: docker.io/percona/percona-server-mongodb-operator:1.16.2
+      createdAt: "2024-07-08T17:35:00.000Z"
       description: Percona Distribution for MongoDB Operator automates the creation,
         modification, or deletion of items in your Percona Server for MongoDB environment
-      olm.skipRange: <v1.16.0
+      features.operators.openshift.io/cnf: "false"
+      features.operators.openshift.io/cni: "false"
+      features.operators.openshift.io/csi: "false"
+      features.operators.openshift.io/disconnected: "false"
+      features.operators.openshift.io/fips-compliant: "false"
+      features.operators.openshift.io/proxy-aware: "false"
+      features.operators.openshift.io/tls-profiles: "false"
+      features.operators.openshift.io/token-auth-aws: "false"
+      features.operators.openshift.io/token-auth-azure: "false"
+      features.operators.openshift.io/token-auth-gcp: "false"
+      olm.skipRange: <v1.16.2
       operatorhub.io/ui-metadata-max-k8s-version: "1.29"
       repository: https://github.com/percona/percona-server-mongodb-operator
       support: Percona
@@ -971,8 +985,8 @@ properties:
     provider:
       name: Percona
 relatedImages:
-- image: docker.io/percona/percona-server-mongodb-operator:1.16.0
+- image: docker.io/percona/percona-server-mongodb-operator:1.16.2
   name: ""
-- image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.16.0
+- image: docker.io/perconalab/percona-server-mongodb-operator:1.16.2-community-bundle
   name: ""
 schema: olm.bundle
