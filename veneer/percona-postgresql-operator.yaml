@@ -4,4 +4,3 @@ GenerateMinorChannels: false
 Stable:
   Bundles:
   - Image: docker.io/perconalab/percona-postgresql-operator:2.3.1-community-bundle
-  - Image: quay.io/operatorhubio/percona-postgresql-operator:v2.4.0
