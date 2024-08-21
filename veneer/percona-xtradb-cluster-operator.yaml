@@ -4,8 +4,9 @@ GenerateMinorChannels: false
 Fast:
   Bundles:
   - Image: quay.io/operatorhubio/percona-xtradb-cluster-operator:v1.14.0
+  - Image: docker.io/percona/percona-xtradb-cluster-operator:1.15.0-community-bundle
 
 Stable:
   Bundles:
-  - Image: quay.io/operatorhubio/percona-xtradb-cluster-operator:v1.13.0
   - Image: quay.io/operatorhubio/percona-xtradb-cluster-operator:v1.14.0
+  - Image: docker.io/percona/percona-xtradb-cluster-operator:1.15.0-community-bundle
