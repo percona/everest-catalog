@@ -505,7 +505,7 @@ properties:
               "crVersion": "1.15.0",
               "tls": {
                 "enabled": true
-              }
+              },
               "updateStrategy": "SmartUpdate",
               "upgradeOptions": {
                 "versionServiceEndpoint": "https://check.percona.com",
@@ -765,61 +765,43 @@ properties:
           name: ""
           version: v1
         version: v1
-    description: |2+
-
-      ## Percona is Cloud Native
-
-      Percona Operator for MySQL based on Percona XtraDB Cluster is an open-source drop in replacement for MySQL Enterprise with synchronous replication running on Kubernetes. It automates the deployment and management of the members in your Percona XtraDB Cluster environment. It can be used to instantiate a new Percona XtraDB Cluster, or to scale an existing environment.
-
-      Consult the [documentation](https://percona.github.io/percona-xtradb-cluster-operator/) on the Percona Operator for MySQL based on Percona XtraDB Cluster for complete details on capabilities and options.
-
-      ### Supported Features
-
-      * **Scale Your Cluster**  change the `size` parameter to [add or remove members](https://percona.github.io/percona-xtradb-cluster-operator/install/scaling) of the cluster. Three is the minimum recommended size for a functioning cluster.
-
-      * **Manage Your Users**  [add, remove, or change](https://percona.github.io/percona-xtradb-cluster-operator/configure/users) the privileges of database users
-
-      * **Automate Your Backups**  [configure cluster backups](https://percona.github.io/percona-xtradb-cluster-operator/configure/operator) to run on a scheduled basis. Backups can be stored on a persistent volume or S3-compatible storage. Leverage [Point-in-time recovery](https://www.percona.com/doc/kubernetes-operator-for-pxc/backups.html#storing-binary-logs-for-point-in-time-recovery) to reduce RPO/RTO.
-      * **Proxy integration**  choose HAProxy or ProxySQL as a proxy in front of the Percona XtraDB Cluster. Proxies are deployed and configured automatically with the Operator.
-
-      ### Common Configurations
-
-      * **Set Resource Limits** - set limitation on requests to CPU and memory resources.
-
-      * **Customize Storage** - set the desired Storage Class and Access Mode for your database cluster data.
-
-      * **Control Scheduling** - define how your PXC Pods are scheduled onto the K8S cluster with tolerations, pod disruption budgets, node selector and affinity settings.
-      * Automatic synchronization of MySQL users with ProxySQL
-      * HAProxy Support
-      * Fully automated minor version updates (Smart Update)
-      * Update Reader members before Writer member at cluster upgrades
-      * Support MySQL versions 5.7 and 8.0
-      ### Before You Start
-
-      Add the PXC user `Secret` to Kubernetes. User information must be placed in the data section of the `secrets.yaml`
-      file with Base64-encoded logins and passwords for the user accounts.
-
-      Below is a sample `secrets.yaml` file for the correct formatting.
-
-      ```
-      apiVersion: v1
-      kind: Secret
-      metadata:
-        name: my-cluster-secrets
-      type: Opaque
-      data:
-        root: cm9vdF9wYXNzd29yZA==
-        xtrabackup: YmFja3VwX3Bhc3N3b3Jk
-        monitor: bW9uaXRvcg==
-        clustercheck: Y2x1c3RlcmNoZWNrcGFzc3dvcmQ=
-        proxyadmin: YWRtaW5fcGFzc3dvcmQ=
-        pmmserver: c3VwYXxefHBheno=
-        operator: b3BlcmF0b3JhZG1pbg==
-        replication: cmVwbF9wYXNzd29yZAo=
-      ```
-      ###  Release Highlights
-      * Custom prefix for Percona Monitoring and Management (PMM) allows using one PMM Server to monitor multiple databases even if they have identical cluster names * The new lifecycle.postStart and lifecycle.preStop Custom Resource options allow configuring postStart and preStop hooks for ProxySQL and HAProxy Pods * It is now possible to resize Persistent Volume Claims by patching the PerconaXtraDBCluster custom resource. Change persistentVolumeClaim.resources.requests.storage and let the Operator do the scaling
-
+    description: "\n## Percona is Cloud Native\n\nPercona Operator for MySQL based
+      on Percona XtraDB Cluster is an open-source drop in replacement for MySQL Enterprise
+      with synchronous replication running on Kubernetes. It automates the deployment
+      and management of the members in your Percona XtraDB Cluster environment. It
+      can be used to instantiate a new Percona XtraDB Cluster, or to scale an existing
+      environment.\n\nConsult the [documentation](https://percona.github.io/percona-xtradb-cluster-operator/)
+      on the Percona Operator for MySQL based on Percona XtraDB Cluster for complete
+      details on capabilities and options.\n\n### Supported Features\n\n* **Scale
+      Your Cluster**  change the `size` parameter to [add or remove members](https://percona.github.io/percona-xtradb-cluster-operator/install/scaling)
+      of the cluster. Three is the minimum recommended size for a functioning cluster.\n\n*
+      **Manage Your Users**  [add, remove, or change](https://percona.github.io/percona-xtradb-cluster-operator/configure/users)
+      the privileges of database users\n\n* **Automate Your Backups**  [configure
+      cluster backups](https://percona.github.io/percona-xtradb-cluster-operator/configure/operator)
+      to run on a scheduled basis. Backups can be stored on a persistent volume or
+      S3-compatible storage. Leverage [Point-in-time recovery](https://www.percona.com/doc/kubernetes-operator-for-pxc/backups.html#storing-binary-logs-for-point-in-time-recovery)
+      to reduce RPO/RTO.\n* **Proxy integration**  choose HAProxy or ProxySQL as a
+      proxy in front of the Percona XtraDB Cluster. Proxies are deployed and configured
+      automatically with the Operator.\n\n### Common Configurations\n\n* **Set Resource
+      Limits** - set limitation on requests to CPU and memory resources.\n\n* **Customize
+      Storage** - set the desired Storage Class and Access Mode for your database
+      cluster data.\n\n* **Control Scheduling** - define how your PXC Pods are scheduled
+      onto the K8S cluster with tolerations, pod disruption budgets, node selector
+      and affinity settings.\n* Automatic synchronization of MySQL users with ProxySQL\n*
+      HAProxy Support\n* Fully automated minor version updates (Smart Update)\n* Update
+      Reader members before Writer member at cluster upgrades\n* Support MySQL versions
+      5.7 and 8.0\n### Before You Start\n\nAdd the PXC user `Secret` to Kubernetes.
+      User information must be placed in the data section of the `secrets.yaml`\nfile
+      with Base64-encoded logins and passwords for the user accounts.\n\nBelow is
+      a sample `secrets.yaml` file for the correct formatting.\n\n```\napiVersion:
+      v1\nkind: Secret\nmetadata:\n  name: my-cluster-secrets\ntype: Opaque\ndata:\n
+      \ root: cm9vdF9wYXNzd29yZA==\n  xtrabackup: YmFja3VwX3Bhc3N3b3Jk\n  monitor:
+      bW9uaXRvcg==\n  clustercheck: Y2x1c3RlcmNoZWNrcGFzc3dvcmQ=\n  proxyadmin: YWRtaW5fcGFzc3dvcmQ=\n
+      \ pmmserver: c3VwYXxefHBheno=\n  operator: b3BlcmF0b3JhZG1pbg==\n  replication:
+      cmVwbF9wYXNzd29yZAo=\n```\n###  Release Highlights\n* General availability of
+      the automated volume resizing * Allowing haproxy-replica Service to cycle through
+      the reader instances only * Fixing the overloaded allowUnsafeConfigurations
+      flag    \n\n"
     displayName: Percona Operator for MySQL based on Percona XtraDB Cluster
     installModes:
     - supported: true
