@@ -4,7 +4,9 @@ GenerateMinorChannels: false
 Fast:
   Bundles:
   - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.15.0
+  - Image: docker.io/perconalab/percona-server-mongodb-operator:1.17.0-community-bundle
 Stable:
   Bundles:
   - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.14.0
   - Image: quay.io/operatorhubio/percona-server-mongodb-operator:v1.15.0
+  - Image: docker.io/perconalab/percona-server-mongodb-operator:1.17.0-community-bundle
