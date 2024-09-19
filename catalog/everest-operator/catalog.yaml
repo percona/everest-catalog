@@ -18,6 +18,7 @@ entries:
 - name: everest-operator.v1.2.0-rc3
 - name: everest-operator.v1.2.0-rc4
 - name: everest-operator.v1.2.0-rc5
+- name: everest-operator.v1.2.0-rc6
   replaces: everest-operator.v0.9.0
   skips:
   - everest-operator.v0.0.0
@@ -33,6 +34,7 @@ entries:
   - everest-operator.v1.2.0-rc2
   - everest-operator.v1.2.0-rc3
   - everest-operator.v1.2.0-rc4
+  - everest-operator.v1.2.0-rc5
 name: fast-v0
 package: everest-operator
 schema: olm.channel
@@ -3126,6 +3128,226 @@ relatedImages:
 - image: docker.io/perconalab/everest-operator-bundle:1.2.0-rc5
   name: ""
 - image: docker.io/perconalab/everest-operator:1.2.0-rc5
+  name: ""
+- image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
+  name: ""
+schema: olm.bundle
+---
+image: docker.io/perconalab/everest-operator-bundle:1.2.0-rc6
+name: everest-operator.v1.2.0-rc6
+package: everest-operator
+properties:
+- type: olm.gvk
+  value:
+    group: everest.percona.com
+    kind: BackupStorage
+    version: v1alpha1
+- type: olm.gvk
+  value:
+    group: everest.percona.com
+    kind: DatabaseCluster
+    version: v1alpha1
+- type: olm.gvk
+  value:
+    group: everest.percona.com
+    kind: DatabaseClusterBackup
+    version: v1alpha1
+- type: olm.gvk
+  value:
+    group: everest.percona.com
+    kind: DatabaseClusterRestore
+    version: v1alpha1
+- type: olm.gvk
+  value:
+    group: everest.percona.com
+    kind: DatabaseEngine
+    version: v1alpha1
+- type: olm.gvk
+  value:
+    group: everest.percona.com
+    kind: MonitoringConfig
+    version: v1alpha1
+- type: olm.package
+  value:
+    packageName: everest-operator
+    version: 1.2.0-rc6
+- type: olm.csv.metadata
+  value:
+    annotations:
+      alm-examples: |-
+        [
+          {
+            "apiVersion": "everest.percona.com/v1alpha1",
+            "kind": "BackupStorage",
+            "metadata": {
+              "labels": {
+                "app.kubernetes.io/created-by": "everest-operator",
+                "app.kubernetes.io/instance": "backupstorage-sample",
+                "app.kubernetes.io/managed-by": "kustomize",
+                "app.kubernetes.io/name": "backupstorage",
+                "app.kubernetes.io/part-of": "everest-operator"
+              },
+              "name": "backupstorage-sample"
+            },
+            "spec": null
+          },
+          {
+            "apiVersion": "everest.percona.com/v1alpha1",
+            "kind": "DatabaseCluster",
+            "metadata": {
+              "labels": {
+                "app.kubernetes.io/created-by": "everest-operator",
+                "app.kubernetes.io/instance": "databasecluster-sample",
+                "app.kubernetes.io/managed-by": "kustomize",
+                "app.kubernetes.io/name": "databasecluster",
+                "app.kubernetes.io/part-of": "everest-operator"
+              },
+              "name": "databasecluster-sample"
+            },
+            "spec": null
+          },
+          {
+            "apiVersion": "everest.percona.com/v1alpha1",
+            "kind": "DatabaseClusterBackup",
+            "metadata": {
+              "labels": {
+                "app.kubernetes.io/created-by": "everest-operator",
+                "app.kubernetes.io/instance": "databaseclusterbackup-sample",
+                "app.kubernetes.io/managed-by": "kustomize",
+                "app.kubernetes.io/name": "databaseclusterbackup",
+                "app.kubernetes.io/part-of": "everest-operator"
+              },
+              "name": "databaseclusterbackup-sample"
+            },
+            "spec": null
+          },
+          {
+            "apiVersion": "everest.percona.com/v1alpha1",
+            "kind": "DatabaseClusterRestore",
+            "metadata": {
+              "labels": {
+                "app.kubernetes.io/created-by": "everest-operator",
+                "app.kubernetes.io/instance": "databaseclusterrestore-sample",
+                "app.kubernetes.io/managed-by": "kustomize",
+                "app.kubernetes.io/name": "databaseclusterrestore",
+                "app.kubernetes.io/part-of": "everest-operator"
+              },
+              "name": "databaseclusterrestore-sample"
+            },
+            "spec": null
+          },
+          {
+            "apiVersion": "everest.percona.com/v1alpha1",
+            "kind": "DatabaseEngine",
+            "metadata": {
+              "labels": {
+                "app.kubernetes.io/created-by": "everest-operator",
+                "app.kubernetes.io/instance": "databaseengine-sample",
+                "app.kubernetes.io/managed-by": "kustomize",
+                "app.kubernetes.io/name": "databaseengine",
+                "app.kubernetes.io/part-of": "everest-operator"
+              },
+              "name": "databaseengine-sample"
+            },
+            "spec": null
+          },
+          {
+            "apiVersion": "everest.percona.com/v1alpha1",
+            "kind": "MonitoringConfig",
+            "metadata": {
+              "labels": {
+                "app.kubernetes.io/created-by": "everest-operator",
+                "app.kubernetes.io/instance": "monitoringconfig-sample",
+                "app.kubernetes.io/managed-by": "kustomize",
+                "app.kubernetes.io/name": "monitoringconfig",
+                "app.kubernetes.io/part-of": "everest-operator"
+              },
+              "name": "monitoringconfig-sample"
+            },
+            "spec": {
+              "credentialsSecretName": "my-secret-name",
+              "pmm": {
+                "image": "percona/pmm-client:latest",
+                "url": "http://localhost"
+              },
+              "type": "pmm"
+            }
+          }
+        ]
+      capabilities: Basic Install
+      createdAt: "2024-09-19T16:21:26Z"
+      operators.operatorframework.io/builder: operator-sdk-v1.32.0
+      operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
+    apiServiceDefinitions: {}
+    crdDescriptions:
+      owned:
+      - description: BackupStorage is the Schema for the backupstorages API.
+        displayName: Backup Storage
+        kind: BackupStorage
+        name: backupstorages.everest.percona.com
+        version: v1alpha1
+      - description: DatabaseClusterBackup is the Schema for the databaseclusterbackups
+          API.
+        displayName: Database Cluster Backup
+        kind: DatabaseClusterBackup
+        name: databaseclusterbackups.everest.percona.com
+        version: v1alpha1
+      - description: DatabaseClusterRestore is the Schema for the databaseclusterrestores
+          API.
+        displayName: Database Cluster Restore
+        kind: DatabaseClusterRestore
+        name: databaseclusterrestores.everest.percona.com
+        version: v1alpha1
+      - description: DatabaseCluster is the Schema for the databaseclusters API.
+        displayName: Database Cluster
+        kind: DatabaseCluster
+        name: databaseclusters.everest.percona.com
+        version: v1alpha1
+      - description: DatabaseEngine is the Schema for the databaseengines API.
+        displayName: Database Engine
+        kind: DatabaseEngine
+        name: databaseengines.everest.percona.com
+        version: v1alpha1
+      - description: MonitoringConfig is the Schema for the monitoringconfigs API.
+        displayName: Monitoring Config
+        kind: MonitoringConfig
+        name: monitoringconfigs.everest.percona.com
+        version: v1alpha1
+    description: Deploy database clusters easily with Everest operator
+    displayName: Everest operator
+    installModes:
+    - supported: true
+      type: OwnNamespace
+    - supported: true
+      type: SingleNamespace
+    - supported: true
+      type: MultiNamespace
+    - supported: false
+      type: AllNamespaces
+    keywords:
+    - everest
+    - dbaas
+    - percona
+    links:
+    - name: Everest Operator
+      url: https://everest-operator.domain
+    maintainers:
+    - email: andrew.minkin@percona.com
+      name: gen1us2k
+    - email: diogo.recharte@percona.com
+      name: recharte
+    - email: oksana.grishchenko@percona.com
+      name: oksana-grishchenko
+    - email: michal.kralik@percona.com
+      name: michal-kralik
+    maturity: alpha
+    provider:
+      name: Percona
+      url: https://percona.com
+relatedImages:
+- image: docker.io/perconalab/everest-operator-bundle:1.2.0-rc6
+  name: ""
+- image: docker.io/perconalab/everest-operator:1.2.0-rc6
   name: ""
 - image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
   name: ""
