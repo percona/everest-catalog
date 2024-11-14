@@ -13,7 +13,7 @@ name: stable-v2
 package: percona-postgresql-operator
 schema: olm.channel
 ---
-image: docker.io/perconalab/percona-postgresql-operator:2.3.1-community-bundle
+image: docker.io/percona/percona-postgresql-operator:2.3.1-community-bundle
 name: percona-postgresql-operator.v2.3.1
 package: percona-postgresql-operator
 properties:
@@ -402,13 +402,13 @@ properties:
       name: Percona
       url: https://www.percona.com/
 relatedImages:
-- image: docker.io/perconalab/percona-postgresql-operator:2.3.1-community-bundle
+- image: docker.io/percona/percona-postgresql-operator:2.3.1-community-bundle
   name: ""
 - image: percona/percona-postgresql-operator:2.3.1
   name: ""
 schema: olm.bundle
 ---
-image: docker.io/perconalab/percona-postgresql-operator:2.4.1-community-bundle
+image: docker.io/percona/percona-postgresql-operator:2.4.1-community-bundle
 name: percona-postgresql-operator.v2.4.1
 package: percona-postgresql-operator
 properties:
@@ -942,6 +942,6 @@ properties:
 relatedImages:
 - image: docker.io/percona/percona-postgresql-operator:2.4.1
   name: ""
-- image: docker.io/perconalab/percona-postgresql-operator:2.4.1-community-bundle
+- image: docker.io/percona/percona-postgresql-operator:2.4.1-community-bundle
   name: ""
 schema: olm.bundle

@@ -496,7 +496,7 @@ relatedImages:
   name: ""
 schema: olm.bundle
 ---
-image: docker.io/perconalab/percona-server-mongodb-operator:1.17.0-community-bundle
+image: docker.io/percona/percona-server-mongodb-operator:1.17.0-community-bundle
 name: percona-server-mongodb-operator.v1.17.0
 package: percona-server-mongodb-operator
 properties:
@@ -872,7 +872,7 @@ properties:
       ## Percona is Cloud Native
       The Percona Distribution for MongoDB Kubernetes Operator automates the creation, modification, or deletion of items in your Percona Server for MongoDB environment. The Operator contains the necessary Kubernetes settings to maintain a consistent Percona Server for MongoDB instance modification, or deletion of items in your Percona Server for MongoDB environment. The Operator contains the necessary Kubernetes settings to maintain a consistent Percona Server for MongoDB instance.
 
-      Consult the [documentation](https://www.percona.com/doc/kubernetes-operator-for-psmongodb/index.html/) on the Percona Kubernetes Operator for Percona Server for MongoDB for complete details on capabilities and options.
+      Consult the [documentation](https://docs.percona.com/percona-operator-for-mongodb/index.html) on the Percona Kubernetes Operator for Percona Server for MongoDB for complete details on capabilities and options.
 
       ### Supported Features
 
@@ -918,6 +918,8 @@ properties:
         PMM_SERVER_API_KEY: dXNlckFkbWluMTIzNDU2
       ```
       ### Release Highlights
+      * Declarative user management (technical preview) Before the Operator version 1.17.0 custom MongoDB users had to be created manually. Now the declarative creation of custom MongoDB users is supported via the users subsection in the Custom Resource. You can specify a new user in deploy/cr.yaml manifest, setting the user’s login name and database, PasswordSecretRef (a reference to a key in a Secret resource containing user’s password) and as well as MongoDB roles on various databases which should be assigned to this user.
+      * Liveness check improvements Several improvements in logging were made related to the liveness checks, to allow getting more information for debugging, and to make these logs persist on failures to allow further examination. Liveness check logs are stored in the /data/db/mongod-data/logs/mongodb-healthcheck.log file, which can be accessed in the corresponding Pod if needed. Starting from now, Liveness check generates more log messages, and the default log level is set to DEBUG. Each time the health check fails, the current log is saved to a gzip compressed file named mongodb-healthcheck-<timestamp>.log.gz, and the mongodb-healthcheck.log log file is reset. Logs older than 24 hours are automatically deleted.
 
     displayName: Percona Distribution for MongoDB Operator
     installModes:
@@ -953,6 +955,6 @@ properties:
 relatedImages:
 - image: docker.io/percona/percona-server-mongodb-operator:1.17.0
   name: ""
-- image: docker.io/perconalab/percona-server-mongodb-operator:1.17.0-community-bundle
+- image: docker.io/percona/percona-server-mongodb-operator:1.17.0-community-bundle
   name: ""
 schema: olm.bundle
