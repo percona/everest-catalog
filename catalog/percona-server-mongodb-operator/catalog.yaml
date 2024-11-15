@@ -9,16 +9,6 @@ entries:
   replaces: percona-server-mongodb-operator.v1.15.0
   skips:
   - percona-server-mongodb-operator.v1.15.0
-name: fast-v1
-package: percona-server-mongodb-operator
-schema: olm.channel
----
-entries:
-- name: percona-server-mongodb-operator.v1.15.0
-- name: percona-server-mongodb-operator.v1.17.0
-  replaces: percona-server-mongodb-operator.v1.15.0
-  skips:
-  - percona-server-mongodb-operator.v1.15.0
 name: stable-v1
 package: percona-server-mongodb-operator
 schema: olm.channel
