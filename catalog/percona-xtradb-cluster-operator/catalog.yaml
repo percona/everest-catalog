@@ -9,16 +9,6 @@ entries:
   replaces: percona-xtradb-cluster-operator.v1.14.0
   skips:
   - percona-xtradb-cluster-operator.v1.14.0
-name: fast-v1
-package: percona-xtradb-cluster-operator
-schema: olm.channel
----
-entries:
-- name: percona-xtradb-cluster-operator.v1.14.0
-- name: percona-xtradb-cluster-operator.v1.15.0
-  replaces: percona-xtradb-cluster-operator.v1.14.0
-  skips:
-  - percona-xtradb-cluster-operator.v1.14.0
 name: stable-v1
 package: percona-xtradb-cluster-operator
 schema: olm.channel
@@ -799,8 +789,8 @@ properties:
       bW9uaXRvcg==\n  clustercheck: Y2x1c3RlcmNoZWNrcGFzc3dvcmQ=\n  proxyadmin: YWRtaW5fcGFzc3dvcmQ=\n
       \ pmmserver: c3VwYXxefHBheno=\n  operator: b3BlcmF0b3JhZG1pbg==\n  replication:
       cmVwbF9wYXNzd29yZAo=\n```\n###  Release Highlights\n* General availability of
-      the automated volume resizing * Allowing haproxy-replica Service to cycle through
-      the reader instances only * Fixing the overloaded allowUnsafeConfigurations
+      the automated volume resizing\n* Allowing haproxy-replica Service to cycle through
+      the reader instances only\n* Fixing the overloaded allowUnsafeConfigurations
       flag    \n\n"
     displayName: Percona Operator for MySQL based on Percona XtraDB Cluster
     installModes:
