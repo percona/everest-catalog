@@ -9,25 +9,30 @@ import (
 )
 
 const (
-	rcBundle      = "docker.io/perconalab/everest-operator-bundle:"
-	releaseBundle = "docker.io/percona/everest-operator-bundle:"
+	rcBundle      = "%s/perconalab/everest-operator-bundle:%s"
+	releaseBundle = "%s/percona/everest-operator-bundle:%s"
 )
 
 type release struct {
 	isRC            bool
 	newVersion      goversion.Version
 	previousVersion goversion.Version
+	registry        string
 }
 
 func (r *release) image() string {
 	version := r.newVersion.String()
 	if r.isRC {
-		return rcBundle + version
+		return r.imageTemplate(rcBundle, version)
 	}
-	return releaseBundle + version
+	return r.imageTemplate(releaseBundle, version)
 }
 
-func (r *release) create(currentVersionStr, newVersionStr string) error {
+func (r *release) imageTemplate(bundleTemplate, tag string) string {
+	return fmt.Sprintf(bundleTemplate, r.registry, tag)
+}
+
+func (r *release) create(currentVersionStr, newVersionStr, registry string) error {
 	currentVersion, err := goversion.NewVersion(currentVersionStr)
 	if err != nil {
 		return fmt.Errorf("%s: can not parse current version: %w", currentVersionStr, err)
@@ -43,6 +48,7 @@ func (r *release) create(currentVersionStr, newVersionStr string) error {
 	}
 	r.newVersion = *newVersion
 	r.previousVersion = *currentVersion
+	r.registry = registry
 	return nil
 }
 
