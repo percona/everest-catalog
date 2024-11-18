@@ -57,7 +57,7 @@ func TestPatch(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			b, err := updateVeneer("./everest-operator_test.yaml", tt.channel, tt.newVersion)
+			b, err := updateVeneerImpl("./everest-operator_test.yaml", tt.channel, tt.newVersion)
 			require.NoError(t, err)
 			actual := string(b)
 			require.Equal(t, tt.expectedOutput, actual)

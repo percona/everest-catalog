@@ -34,27 +34,36 @@ func main() {
 }
 
 func updateVeneer(veneerFile, channel, newVersionStr string) error {
+	b, err := updateVeneerImpl(veneerFile, channel, newVersionStr)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(veneerFile, b, 0644)
+}
+
+func updateVeneerImpl(veneerFile, channel, newVersionStr string) ([]byte, error) {
 	var t EverestBasicTemplate
 	err := t.readFromFile(veneerFile)
 	if err != nil {
-		return fmt.Errorf("failed to read template: %w", err)
+		return nil, fmt.Errorf("failed to read template: %w", err)
 	}
 
 	var r release
 	err = r.create(t.currentVersion(channel), newVersionStr)
 	if err != nil {
-		return fmt.Errorf("%s: invalid version format: %w", newVersionStr, err)
+		return nil, fmt.Errorf("%s: invalid version format: %w", newVersionStr, err)
 	}
 
 	err = t.update(r, channel)
 	if err != nil {
-		return fmt.Errorf("failed to update template: %w", err)
+		return nil, fmt.Errorf("failed to update template: %w", err)
 	}
 
 	b, err := t.toByteArray()
 	if err != nil {
-		return fmt.Errorf("failed to convert data: %w", err)
+		return nil, fmt.Errorf("failed to convert data: %w", err)
 	}
 
-	return os.WriteFile(veneerFile, b, 0644)
+	return b, nil
 }
