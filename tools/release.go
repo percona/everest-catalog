@@ -13,26 +13,26 @@ const (
 	releaseBundle = "%s/percona/everest-operator-bundle:%s"
 )
 
-type release struct {
-	isRC            bool
+type build struct {
+	isRelease       bool
 	newVersion      goversion.Version
 	previousVersion goversion.Version
 	registry        string
 }
 
-func (r *release) image() string {
-	version := r.newVersion.String()
-	if r.isRC {
-		return r.imageTemplate(rcBundle, version)
+func (b *build) image() string {
+	version := b.newVersion.String()
+	if b.isRelease {
+		return b.imageTemplate(releaseBundle, version)
 	}
-	return r.imageTemplate(releaseBundle, version)
+	return b.imageTemplate(rcBundle, version)
 }
 
-func (r *release) imageTemplate(bundleTemplate, tag string) string {
-	return fmt.Sprintf(bundleTemplate, r.registry, tag)
+func (b *build) imageTemplate(bundleTemplate, tag string) string {
+	return fmt.Sprintf(bundleTemplate, b.registry, tag)
 }
 
-func (r *release) create(currentVersionStr, newVersionStr, registry string) error {
+func (b *build) create(currentVersionStr, newVersionStr, registry string, testRepo bool) error {
 	currentVersion, err := goversion.NewVersion(currentVersionStr)
 	if err != nil {
 		return fmt.Errorf("%s: can not parse current version: %w", currentVersionStr, err)
@@ -43,17 +43,17 @@ func (r *release) create(currentVersionStr, newVersionStr, registry string) erro
 		return fmt.Errorf("%s: can not parse new version: %w", newVersionStr, err)
 	}
 
-	if strings.Contains(newVersionStr, "rc") {
-		r.isRC = true
+	b.newVersion = *newVersion
+	b.previousVersion = *currentVersion
+	b.registry = registry
+	if !strings.Contains(newVersionStr, "rc") && !testRepo {
+		b.isRelease = true
 	}
-	r.newVersion = *newVersion
-	r.previousVersion = *currentVersion
-	r.registry = registry
 	return nil
 }
 
-func (r *release) bundle() (*declcfg.Meta, error) {
-	bundle := declcfg.Bundle{Schema: declcfg.SchemaBundle, Image: r.image()}
+func (b *build) bundle() (*declcfg.Meta, error) {
+	bundle := declcfg.Bundle{Schema: declcfg.SchemaBundle, Image: b.image()}
 	bundleBytes, err := json.Marshal(bundle)
 	if err != nil {
 		return nil, err

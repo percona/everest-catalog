@@ -49,10 +49,10 @@ func (t *EverestBasicTemplate) toByteArray() ([]byte, error) {
 	return yaml.Marshal(jsonInterface)
 }
 
-func (t *EverestBasicTemplate) update(release release, channel string) error {
+func (t *EverestBasicTemplate) update(build build, channel string) error {
 	for i, meta := range t.Entries {
 		if meta.Schema == declcfg.SchemaChannel && meta.Name == channel {
-			bytes, err := updateBlob(meta.Blob, release, channel)
+			bytes, err := updateBlob(meta.Blob, build, channel)
 			if err != nil {
 				return fmt.Errorf("failed to update channel data %s", channel)
 			}
@@ -61,7 +61,7 @@ func (t *EverestBasicTemplate) update(release release, channel string) error {
 		}
 	}
 
-	return t.addBundle(release)
+	return t.addBundle(build)
 }
 
 func (t *EverestBasicTemplate) currentVersion(channel string) string {
@@ -78,7 +78,7 @@ func (t *EverestBasicTemplate) currentVersion(channel string) string {
 	return ""
 }
 
-func updateBlob(channelBlob json.RawMessage, release release, channel string) ([]byte, error) {
+func updateBlob(channelBlob json.RawMessage, build build, channel string) ([]byte, error) {
 	var ch declcfg.Channel
 	err := json.Unmarshal(channelBlob, &ch)
 	if err != nil {
@@ -91,7 +91,7 @@ func updateBlob(channelBlob json.RawMessage, release release, channel string) ([
 	lastVersion := ch.Entries[len(ch.Entries)-1]
 	// new version inherits the replaces from the last version and adds a new skip to the skips
 	newVersion := declcfg.ChannelEntry{
-		Name:     versionPrefix + release.newVersion.String(),
+		Name:     versionPrefix + build.newVersion.String(),
 		Replaces: lastVersion.Replaces,
 		Skips:    append(lastVersion.Skips, lastVersion.Name),
 	}
@@ -103,20 +103,20 @@ func updateBlob(channelBlob json.RawMessage, release release, channel string) ([
 	return json.Marshal(ch)
 }
 
-func (t *EverestBasicTemplate) addBundle(r release) error {
+func (t *EverestBasicTemplate) addBundle(b build) error {
 	for _, entry := range t.Entries {
-		var b declcfg.Bundle
-		err := json.Unmarshal(entry.Blob, &b)
+		var bundle declcfg.Bundle
+		err := json.Unmarshal(entry.Blob, &bundle)
 		if err != nil {
 			continue
 		}
-		if b.Image == r.image() {
+		if bundle.Image == b.image() {
 			// if there is already such a bundle defined - do nothing
 			// it might happen when two channels are being updated separately with the same version.
 			return nil
 		}
 	}
-	bundle, err := r.bundle()
+	bundle, err := b.bundle()
 	if err != nil {
 		return fmt.Errorf("failed to create new bundle: %w", err)
 	}
