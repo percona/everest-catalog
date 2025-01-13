@@ -5,7 +5,7 @@ schema: olm.package
 ---
 entries:
 - name: percona-xtradb-cluster-operator.v1.15.0
-- name: percona-xtradb-cluster-operator.v1.16.0
+- name: percona-xtradb-cluster-operator.v1.16.1
   replaces: percona-xtradb-cluster-operator.v1.15.0
 name: stable-v1
 package: percona-xtradb-cluster-operator
@@ -387,8 +387,8 @@ relatedImages:
   name: ""
 schema: olm.bundle
 ---
-image: docker.io/percona/percona-xtradb-cluster-operator:1.16.0-community-bundle
-name: percona-xtradb-cluster-operator.v1.16.0
+image: docker.io/percona/percona-xtradb-cluster-operator:1.16.1-community-bundle
+name: percona-xtradb-cluster-operator.v1.16.1
 package: percona-xtradb-cluster-operator
 properties:
 - type: olm.gvk
@@ -409,7 +409,7 @@ properties:
 - type: olm.package
   value:
     packageName: percona-xtradb-cluster-operator
-    version: 1.16.0
+    version: 1.16.1
 - type: olm.csv.metadata
   value:
     annotations:
@@ -425,12 +425,12 @@ properties:
               ]
             },
             "spec": {
-              "crVersion": "1.16.0",
+              "crVersion": "1.16.1",
               "tls": {
                 "enabled": true
               },
               "initContainer" : {
-                  "image": "docker.io/percona/percona-xtradb-cluster-operator:1.16.0"
+                  "image": "docker.io/percona/percona-xtradb-cluster-operator:1.16.1"
                 },
               "updateStrategy": "SmartUpdate",
               "upgradeOptions": {
@@ -512,7 +512,7 @@ properties:
               },
               "logcollector": {
                 "enabled": true,
-                "image": "docker.io/percona/percona-xtradb-cluster-operator:1.16.0-logcollector-fluentbit3.2.2",
+                "image": "docker.io/percona/percona-xtradb-cluster-operator:1.16.1-logcollector-fluentbit3.2.2",
                 "resources": {
                   "requests": {
                     "memory": "100M",
@@ -532,7 +532,7 @@ properties:
                 }
               },
               "backup": {
-                "image": "docker.io/percona/percona-xtradb-cluster-operator:1.16.0-pxc8.0-backup-pxb8.0.35",
+                "image": "docker.io/percona/percona-xtradb-cluster-operator:1.16.1-pxc8.0-backup-pxb8.0.35",
                 "pitr": {
                   "enabled": false,
                   "storageName": "STORAGE-NAME-HERE",
@@ -609,11 +609,11 @@ properties:
       capabilities: Deep Insights
       categories: Database
       certified: "true"
-      containerImage: docker.io/percona/percona-xtradb-cluster-operator:1.16.0
-      createdAt: "2024-12-16T12:40:21.383Z"
+      containerImage: docker.io/percona/percona-xtradb-cluster-operator:1.16.1
+      createdAt: 2024-12-24T13:02:46.3NZ
       description: Percona Operator for MySQL based on Percona XtraDB Cluster manages
         the lifecycle of Percona XtraDB cluster instances.
-      olm.skipRange: <v1.16.0
+      olm.skipRange: <v1.16.1
       repository: https://github.com/percona/percona-xtradb-cluster-operator
       support: Percona
     apiServiceDefinitions: {}
@@ -691,42 +691,60 @@ properties:
           name: ""
           version: v1
         version: v1
-    description: "\n## Percona is Cloud Native\n\nPercona Operator for MySQL based
-      on Percona XtraDB Cluster is an open-source drop in replacement for MySQL Enterprise
-      with synchronous replication running on Kubernetes. It automates the deployment
-      and management of the members in your Percona XtraDB Cluster environment. It
-      can be used to instantiate a new Percona XtraDB Cluster, or to scale an existing
-      environment.\n\nConsult the [documentation](https://percona.github.io/percona-xtradb-cluster-operator/)
-      on the Percona Operator for MySQL based on Percona XtraDB Cluster for complete
-      details on capabilities and options.\n\n### Supported Features\n\n* **Scale
-      Your Cluster**  change the `size` parameter to [add or remove members](https://percona.github.io/percona-xtradb-cluster-operator/install/scaling)
-      of the cluster. Three is the minimum recommended size for a functioning cluster.\n\n*
-      **Manage Your Users**  [add, remove, or change](https://percona.github.io/percona-xtradb-cluster-operator/configure/users)
-      the privileges of database users\n\n* **Automate Your Backups**  [configure
-      cluster backups](https://percona.github.io/percona-xtradb-cluster-operator/configure/operator)
-      to run on a scheduled basis. Backups can be stored on a persistent volume or
-      S3-compatible storage. Leverage [Point-in-time recovery](https://www.percona.com/doc/kubernetes-operator-for-pxc/backups.html#storing-binary-logs-for-point-in-time-recovery)
-      to reduce RPO/RTO.\n* **Proxy integration**  choose HAProxy or ProxySQL as a
-      proxy in front of the Percona XtraDB Cluster. Proxies are deployed and configured
-      automatically with the Operator.\n\n### Common Configurations\n\n* **Set Resource
-      Limits** - set limitation on requests to CPU and memory resources.\n\n* **Customize
-      Storage** - set the desired Storage Class and Access Mode for your database
-      cluster data.\n\n* **Control Scheduling** - define how your PXC Pods are scheduled
-      onto the K8S cluster with tolerations, pod disruption budgets, node selector
-      and affinity settings.\n* Automatic synchronization of MySQL users with ProxySQL\n*
-      HAProxy Support\n* Fully automated minor version updates (Smart Update)\n* Update
-      Reader members before Writer member at cluster upgrades\n* Support MySQL versions
-      5.7 and 8.0\n### Before You Start\n\nAdd the PXC user `Secret` to Kubernetes.
-      User information must be placed in the data section of the `secrets.yaml`\nfile
-      with Base64-encoded logins and passwords for the user accounts.\n\nBelow is
-      a sample `secrets.yaml` file for the correct formatting.\n\n```\napiVersion:
-      v1\nkind: Secret\nmetadata:\n  name: my-cluster-secrets\ntype: Opaque\ndata:\n
-      \ root: cm9vdF9wYXNzd29yZA==\n  xtrabackup: YmFja3VwX3Bhc3N3b3Jk\n  monitor:
-      bW9uaXRvcg==\n  proxyadmin: YWRtaW5fcGFzc3dvcmQ=\n  pmmserverkey: c3VwYXxefHBheno=\n
-      \ operator: b3BlcmF0b3JhZG1pbg==\n  replication: cmVwbF9wYXNzd29yZAo=\n```\n###
-      \ Release Highlights\n* General availability of the automated volume resizing\n*
-      Allowing haproxy-replica Service to cycle through the reader instances only\n*
-      Fixing the overloaded allowUnsafeConfigurations flag    \n\n"
+    description: |2+
+
+      ## Percona is Cloud Native
+
+      Percona Operator for MySQL based on Percona XtraDB Cluster is an open-source drop in replacement for MySQL Enterprise with synchronous replication running on Kubernetes. It automates the deployment and management of the members in your Percona XtraDB Cluster environment. It can be used to instantiate a new Percona XtraDB Cluster, or to scale an existing environment.
+
+      Consult the [documentation](https://percona.github.io/percona-xtradb-cluster-operator/) on the Percona Operator for MySQL based on Percona XtraDB Cluster for complete details on capabilities and options.
+
+      ### Supported Features
+
+      * **Scale Your Cluster**  change the `size` parameter to [add or remove members](https://percona.github.io/percona-xtradb-cluster-operator/install/scaling) of the cluster. Three is the minimum recommended size for a functioning cluster.
+
+      * **Manage Your Users**  [add, remove, or change](https://percona.github.io/percona-xtradb-cluster-operator/configure/users) the privileges of database users
+
+      * **Automate Your Backups**  [configure cluster backups](https://percona.github.io/percona-xtradb-cluster-operator/configure/operator) to run on a scheduled basis. Backups can be stored on a persistent volume or S3-compatible storage. Leverage [Point-in-time recovery](https://www.percona.com/doc/kubernetes-operator-for-pxc/backups.html#storing-binary-logs-for-point-in-time-recovery) to reduce RPO/RTO.
+      * **Proxy integration**  choose HAProxy or ProxySQL as a proxy in front of the Percona XtraDB Cluster. Proxies are deployed and configured automatically with the Operator.
+
+      ### Common Configurations
+
+      * **Set Resource Limits** - set limitation on requests to CPU and memory resources.
+
+      * **Customize Storage** - set the desired Storage Class and Access Mode for your database cluster data.
+
+      * **Control Scheduling** - define how your PXC Pods are scheduled onto the K8S cluster with tolerations, pod disruption budgets, node selector and affinity settings.
+      * Automatic synchronization of MySQL users with ProxySQL
+      * HAProxy Support
+      * Fully automated minor version updates (Smart Update)
+      * Update Reader members before Writer member at cluster upgrades
+      * Support MySQL versions 5.7 and 8.0
+      ### Before You Start
+
+      Add the PXC user `Secret` to Kubernetes. User information must be placed in the data section of the `secrets.yaml`
+      file with Base64-encoded logins and passwords for the user accounts.
+
+      Below is a sample `secrets.yaml` file for the correct formatting.
+
+      ```
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: my-cluster-secrets
+      type: Opaque
+      data:
+        root: cm9vdF9wYXNzd29yZA==
+        xtrabackup: YmFja3VwX3Bhc3N3b3Jk
+        monitor: bW9uaXRvcg==
+        proxyadmin: YWRtaW5fcGFzc3dvcmQ=
+        pmmserverkey: c3VwYXxefHBheno=
+        operator: b3BlcmF0b3JhZG1pbg==
+        replication: cmVwbF9wYXNzd29yZAo=
+      ```
+      ###  Release Highlights
+      * ** !!!!!!!!!!!!!!!! UPDATE AFTER RELEASE NOTES ARE READY!!!!!!!!!!!!!!!!!!!!!!!!!
+
     displayName: Percona Operator for MySQL based on Percona XtraDB Cluster
     installModes:
     - supported: true
@@ -759,8 +777,8 @@ properties:
     provider:
       name: Percona
 relatedImages:
-- image: docker.io/percona/percona-xtradb-cluster-operator:1.16.0
+- image: docker.io/percona/percona-xtradb-cluster-operator:1.16.1
   name: ""
-- image: docker.io/percona/percona-xtradb-cluster-operator:1.16.0-community-bundle
+- image: docker.io/percona/percona-xtradb-cluster-operator:1.16.1-community-bundle
   name: ""
 schema: olm.bundle
