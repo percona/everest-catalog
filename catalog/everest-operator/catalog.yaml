@@ -104,11 +104,8 @@ properties:
             "kind": "BackupStorage",
             "metadata": {
               "labels": {
-                "app.kubernetes.io/created-by": "everest-operator",
-                "app.kubernetes.io/instance": "backupstorage-sample",
                 "app.kubernetes.io/managed-by": "kustomize",
-                "app.kubernetes.io/name": "backupstorage",
-                "app.kubernetes.io/part-of": "everest-operator"
+                "app.kubernetes.io/name": "everest-operator"
               },
               "name": "backupstorage-sample"
             },
@@ -119,11 +116,8 @@ properties:
             "kind": "DatabaseCluster",
             "metadata": {
               "labels": {
-                "app.kubernetes.io/created-by": "everest-operator",
-                "app.kubernetes.io/instance": "databasecluster-sample",
                 "app.kubernetes.io/managed-by": "kustomize",
-                "app.kubernetes.io/name": "databasecluster",
-                "app.kubernetes.io/part-of": "everest-operator"
+                "app.kubernetes.io/name": "everest-operator"
               },
               "name": "databasecluster-sample"
             },
@@ -134,11 +128,8 @@ properties:
             "kind": "DatabaseClusterBackup",
             "metadata": {
               "labels": {
-                "app.kubernetes.io/created-by": "everest-operator",
-                "app.kubernetes.io/instance": "databaseclusterbackup-sample",
                 "app.kubernetes.io/managed-by": "kustomize",
-                "app.kubernetes.io/name": "databaseclusterbackup",
-                "app.kubernetes.io/part-of": "everest-operator"
+                "app.kubernetes.io/name": "everest-operator"
               },
               "name": "databaseclusterbackup-sample"
             },
@@ -149,11 +140,8 @@ properties:
             "kind": "DatabaseClusterRestore",
             "metadata": {
               "labels": {
-                "app.kubernetes.io/created-by": "everest-operator",
-                "app.kubernetes.io/instance": "databaseclusterrestore-sample",
                 "app.kubernetes.io/managed-by": "kustomize",
-                "app.kubernetes.io/name": "databaseclusterrestore",
-                "app.kubernetes.io/part-of": "everest-operator"
+                "app.kubernetes.io/name": "everest-operator"
               },
               "name": "databaseclusterrestore-sample"
             },
@@ -164,11 +152,8 @@ properties:
             "kind": "DatabaseEngine",
             "metadata": {
               "labels": {
-                "app.kubernetes.io/created-by": "everest-operator",
-                "app.kubernetes.io/instance": "databaseengine-sample",
                 "app.kubernetes.io/managed-by": "kustomize",
-                "app.kubernetes.io/name": "databaseengine",
-                "app.kubernetes.io/part-of": "everest-operator"
+                "app.kubernetes.io/name": "everest-operator"
               },
               "name": "databaseengine-sample"
             },
@@ -179,27 +164,18 @@ properties:
             "kind": "MonitoringConfig",
             "metadata": {
               "labels": {
-                "app.kubernetes.io/created-by": "everest-operator",
-                "app.kubernetes.io/instance": "monitoringconfig-sample",
                 "app.kubernetes.io/managed-by": "kustomize",
-                "app.kubernetes.io/name": "monitoringconfig",
-                "app.kubernetes.io/part-of": "everest-operator"
+                "app.kubernetes.io/name": "everest-operator"
               },
               "name": "monitoringconfig-sample"
             },
-            "spec": {
-              "credentialsSecretName": "my-secret-name",
-              "pmm": {
-                "image": "percona/pmm-client:latest",
-                "url": "http://localhost"
-              },
-              "type": "pmm"
-            }
+            "spec": null
           }
         ]
       capabilities: Basic Install
-      operators.operatorframework.io/builder: operator-sdk-v1.25.2
-      operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
+      createdAt: "2025-01-13T06:38:55Z"
+      operators.operatorframework.io/builder: operator-sdk-v1.38.0
+      operators.operatorframework.io/project_layout: go.kubebuilder.io/v4
     apiServiceDefinitions: {}
     crdDescriptions:
       owned:
@@ -254,10 +230,10 @@ properties:
     - name: Everest Operator
       url: https://everest-operator.domain
     maintainers:
-    - email: andrew.minkin@percona.com
-      name: gen1us2k
     - email: diogo.recharte@percona.com
-      name: recharte
+      name: diogo-recharte
+    - email: mayank.shah@percona.com
+      name: mayank-shah
     - email: oksana.grishchenko@percona.com
       name: oksana-grishchenko
     - email: michal.kralik@percona.com
@@ -270,8 +246,6 @@ relatedImages:
 - image: docker.io/perconalab/everest-operator-bundle:0.0.0
   name: ""
 - image: docker.io/perconalab/everest-operator:0.0.0
-  name: ""
-- image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
   name: ""
 schema: olm.bundle
 ---
