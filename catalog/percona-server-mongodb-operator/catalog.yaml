@@ -965,7 +965,7 @@ properties:
     provider:
       name: Percona
 relatedImages:
-- image: docker.io/percona/percona-server-mongodb-operator:1.18.0
+- image: docker.io/percona/percona-server-mongodb-operator:1.19.0
   name: ""
 - image: docker.io/percona/percona-server-mongodb-operator:1.19.0-community-bundle
   name: ""
