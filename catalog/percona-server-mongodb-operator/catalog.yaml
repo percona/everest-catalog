@@ -490,7 +490,7 @@ relatedImages:
   name: ""
 schema: olm.bundle
 ---
-image: docker.io/perconalab/percona-server-mongodb-operator:1.19.1-community-bundle
+image: docker.io/percona/percona-server-mongodb-operator:1.19.1-community-bundle
 name: percona-server-mongodb-operator.v1.19.1
 package: percona-server-mongodb-operator
 properties:
@@ -923,7 +923,14 @@ properties:
         PMM_SERVER_API_KEY: dXNlckFkbWluMTIzNDU2
       ```
       ### Release Highlights
-      * **Hotfix release to disable balancer before logical restore**
+      * **Bugs Fixed**
+
+        Revert to disabling MongoDB balancer during restores to follow requirements of Percona Backup for MongoDB 2.8.0.
+
+      * **Known limitations**
+
+        Operator versions 1.19.0 and 1.19.1 have a recommended MongoDB version set to 7.0 because point-in-time recovery may fail on MongoDB 8.0 if sharding is enabled and the Operator version is 1.19.x.
+        Therefore, upgrading to Operator 1.19.0/1.19.1 is not recommended for sharded MongoDB 8.0 clusters.
 
     displayName: Percona Distribution for MongoDB Operator
     installModes:
@@ -959,6 +966,6 @@ properties:
 relatedImages:
 - image: docker.io/percona/percona-server-mongodb-operator:1.19.1
   name: ""
-- image: docker.io/perconalab/percona-server-mongodb-operator:1.19.1-community-bundle
+- image: docker.io/percona/percona-server-mongodb-operator:1.19.1-community-bundle
   name: ""
 schema: olm.bundle
