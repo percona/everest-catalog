@@ -24,25 +24,25 @@ jobs:
 
       - name: Check default main state - generated files for everest-operator
         run: |
-          make everest-operator-render-catalog
+          make render-everest-operator-catalog
           echo "Checking there is no source code changes"
           git diff --exit-code
 
       - name: Check default main state - generated files for postgresql-operator
         run: |
-          make postgresql-operator-render-catalog
+          make render-postgresql-operator-catalog
           echo "Checking there is no source code changes"
           git diff --exit-code
 
       - name: Check default main state - generated files for pxc-operator
         run: |
-          make pxc-operator-render-catalog
+          make render-pxc-operator-catalog
           echo "Checking there is no source code changes"
           git diff --exit-code
 
       - name: Check default main state - generated files for psmdb-operator
         run: |
-          make psmdb-operator-render-catalog
+          make render-psmdb-operator-catalog
           echo "Checking there is no source code changes"
           git diff --exit-code
 
