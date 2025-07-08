@@ -21,18 +21,33 @@ jobs:
             echo "veneer/everest-operator.yaml should have the 0.0.0 image in the Stable channel images list" 
             exit 1 
           fi
-      - name: Check default main state - generated files
+
+      - name: Check default main state - generated files for everest-operator
         run: |
-          echo "Download opm tool"
-          curl -Lo /tmp/opm https://github.com/operator-framework/operator-registry/releases/download/v1.56.0/linux-amd64-opm
-          chmod +x /tmp/opm
-          echo "Render catalog"
-          /tmp/opm alpha render-template basic -o yaml ./veneer/everest-operator.yaml > ./catalog/everest-operator/catalog.yaml
+          make everest-operator-render-catalog
+          echo "Checking there is no source code changes"
+          git diff --exit-code
+
+      - name: Check default main state - generated files for postgresql-operator
+        run: |
+          make postgresql-operator-render-catalog
+          echo "Checking there is no source code changes"
+          git diff --exit-code
+
+      - name: Check default main state - generated files for pxc-operator
+        run: |
+          make pxc-operator-render-catalog
+          echo "Checking there is no source code changes"
+          git diff --exit-code
+
+      - name: Check default main state - generated files for psmdb-operator
+        run: |
+          make psmdb-operator-render-catalog
           echo "Checking there is no source code changes"
           git diff --exit-code
 
       - name: Build image to check it for vulnerabilities
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: false

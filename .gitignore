@@ -1,10 +1,15 @@
 ### VisualStudioCode template
-.vscode/*
+.vscode
 
 # Local History for Visual Studio Code
-.history/
+.history
 
 ### JetBrains template
-
 # User-specific stuff
-.idea/*
+.idea
+*.swp
+*.swo
+*~
+
+### Binaries for programs and plugins
+bin
