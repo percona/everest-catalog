@@ -1,0 +1,10 @@
+### VisualStudioCode template
+.vscode/*
+
+# Local History for Visual Studio Code
+.history/
+
+### JetBrains template
+
+# User-specific stuff
+.idea/*
