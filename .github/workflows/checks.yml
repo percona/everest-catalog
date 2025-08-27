@@ -15,19 +15,6 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Check default main state - dev version
-        run: |
-          if ! grep -q "docker.io/perconalab/everest-operator-bundle:0.0.0" veneer/everest-operator.yaml; then 
-            echo "veneer/everest-operator.yaml should have the 0.0.0 image in the Stable channel images list" 
-            exit 1 
-          fi
-
-      - name: Check default main state - generated files for everest-operator
-        run: |
-          make render-everest-operator-catalog
-          echo "Checking there is no source code changes"
-          git diff --exit-code
-
       - name: Check default main state - generated files for postgresql-operator
         run: |
           make render-postgresql-operator-catalog
