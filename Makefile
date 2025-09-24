@@ -43,11 +43,6 @@ ifeq (,$(wildcard $(POLICY_FILE)))
 	}
 endif
 
-.PHONY: render-everest-operator-catalog
-render-everest-operator-catalog: opm ## Render the everest-operator catalog.
-	@echo "Rendering everest-operator catalog"
-	$(OPM) alpha render-template basic -o yaml ./veneer/everest-operator.yaml > ./catalog/everest-operator/catalog.yaml
-
 .PHONY: render-postgresql-operator-catalog
 render-postgresql-operator-catalog: opm ## Render the postgresql-operator catalog.
 	@echo "Rendering postgresql-operator catalog"
@@ -68,13 +63,8 @@ render-ps-operator-catalog: opm ## Render the ps-operator catalog.
 	@echo "Rendering ps-operator catalog"
 	$(OPM) alpha render-template semver -o yaml ./veneer/percona-server-mysql-operator.yaml > ./catalog/percona-server-mysql-operator/catalog.yaml
 
-.PHONY: render-vm-operator-catalog
-render-vm-operator-catalog: opm ## Render the vm-operator catalog.
-	@echo "Rendering vm-operator catalog"
-	$(OPM) alpha render-template semver -o yaml ./veneer/victoriametrics-operator.yaml > ./catalog/victoriametrics-operator/catalog.yaml
-
 PHONY: render-all-catalogs
-TARGET_DEPS := render-everest-operator-catalog render-postgresql-operator-catalog
+TARGET_DEPS := render-postgresql-operator-catalog
 TARGET_DEPS += render-psmdb-operator-catalog render-pxc-operator-catalog
-TARGET_DEPS += render-ps-operator-catalog render-vm-operator-catalog
+TARGET_DEPS += render-ps-operator-catalog
 render-all-catalogs: $(TARGET_DEPS) ## Render the vm-operator catalog
