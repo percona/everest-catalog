@@ -4,4 +4,4 @@ GenerateMinorChannels: false
 Stable:
   Bundles:
   - Image: docker.io/percona/percona-postgresql-operator:2.7.0-community-bundle
-  - Image: docker.io/perconalab/percona-postgresql-operator:2.8.0-community-bundle
+  - Image: docker.io/percona/percona-postgresql-operator:2.8.0-community-bundle
