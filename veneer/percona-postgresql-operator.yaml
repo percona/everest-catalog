@@ -1,7 +1,23 @@
-Schema: olm.semver
-GenerateMajorChannels: true
-GenerateMinorChannels: false
-Stable:
-  Bundles:
-  - Image: docker.io/percona/percona-postgresql-operator:3.0.0-community-bundle
-  - Image: docker.io/percona/percona-postgresql-operator:3.1.0-community-bundle
+# This package uses the basic template (instead of semver) because the
+# semver template never generates upgrade edges across major-version
+# channels. The explicit `replaces` on v3.0.0 is required so that OLM can
+# upgrade v2.9.0 installs to stable-v3; without it no InstallPlan is created.
+# v3.1.0 must not skip v3.0.0: OLM never installs a skipped bundle, so
+# v2.9.0 installs could not upgrade through v3.0.0.
+schema: olm.template.basic
+entries:
+- schema: olm.package
+  name: percona-postgresql-operator
+  defaultChannel: stable-v3
+- schema: olm.channel
+  package: percona-postgresql-operator
+  name: stable-v3
+  entries:
+  - name: percona-postgresql-operator.v3.0.0
+    replaces: percona-postgresql-operator.v2.9.0
+  - name: percona-postgresql-operator.v3.1.0
+    replaces: percona-postgresql-operator.v3.0.0
+- schema: olm.bundle
+  image: docker.io/percona/percona-postgresql-operator:3.0.0-community-bundle
+- schema: olm.bundle
+  image: docker.io/percona/percona-postgresql-operator:3.1.0-community-bundle

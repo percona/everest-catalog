@@ -24,6 +24,9 @@ jobs:
           echo "Checking there is no source code changes"
           git diff --exit-code
 
+      - name: Check postgresql-operator v2.9.0 can upgrade through v3.0.0 to v3.1.0
+        run: make check-postgresql-operator-upgrade
+
       - name: Check default main state - generated files for pxc-operator
         run: |
           make render-pxc-operator-catalog
