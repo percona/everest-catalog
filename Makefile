@@ -46,7 +46,15 @@ endif
 .PHONY: render-postgresql-operator-catalog
 render-postgresql-operator-catalog: opm ## Render the postgresql-operator catalog.
 	@echo "Rendering postgresql-operator catalog"
-	$(OPM) alpha render-template semver -o yaml ./veneer/percona-postgresql-operator.yaml > ./catalog/percona-postgresql-operator/catalog.yaml
+	$(OPM) alpha render-template basic -o yaml ./veneer/percona-postgresql-operator.yaml > ./catalog/percona-postgresql-operator/catalog.yaml
+
+.PHONY: check-postgresql-operator-upgrade
+check-postgresql-operator-upgrade: opm ## Check that postgresql-operator v2.9.0 can upgrade through v3.0.0 to v3.1.0.
+	$(OPM) render ./catalog/percona-postgresql-operator -o json | jq -e \
+		--arg from percona-postgresql-operator.v2.9.0 \
+		--arg via percona-postgresql-operator.v3.0.0 \
+		--arg to percona-postgresql-operator.v3.1.0 \
+		'select(.schema == "olm.channel" and .name == "stable-v3") | .entries as $$e | any($$e[]; .name == $$via and .replaces == $$from) and any($$e[]; .name == $$to and .replaces == $$via) and all($$e[]; (.skips // []) | index($$via) | not)' > /dev/null
 
 .PHONY: render-psmdb-operator-catalog
 render-psmdb-operator-catalog: opm ## Render the psmdb-operator catalog.
